@@ -54,8 +54,17 @@ The LLM Wiki is the **knowledge that compounds**; the Continual Harness is the *
 
 ```
 .
-├── src/          # framework scafolding
-├── CLAUDE.md
+├── assistant/            # the root assistant node (a recursive unit — see docs/recursion.md)
+│   ├── AGENTS.md         #   entrypoint: bootstrap, then act
+│   ├── memory/           #   4-layer memory: core, procedural, declarative, working
+│   ├── skills/           #   SKILL.md playbooks: core/, wiki/, assistants/
+│   ├── sources/          #   raw source pipeline: inbox → library/archive
+│   ├── templates/        #   wiki page skeletons
+│   ├── wiki/             #   curated knowledge base (index.md, schema.md, pages)
+│   └── assistants/       #   child nodes, each an identical assistant
+├── docs/                 # concepts, memory model, recursion
+├── README.md
+└── CLAUDE.md
 ```
 
 
