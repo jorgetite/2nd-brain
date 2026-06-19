@@ -1,21 +1,122 @@
 # Layer 2 — Procedural Memory
 
-The routing table: it maps an intent or trigger to the skill that handles it. This is how the
-node decides what to do. Slow-changing — `skills/core/reflect` appends new routes as the node
-learns. The skills themselves live in `skills/`; this layer only routes to them.
+The assistant's *what and how*. Defines the architecture layout, the operating procedures and conventions, and the routes to the skills that carry out specific workflows. This file plus the skills it indexes say *how* the work is done.
 
-## Routes
 
-| Trigger / intent                | Skill                       |
-| ------------------------------- | --------------------------- |
-| Personalize a fresh node        | `skills/core/init`          |
-| Hand a task to a child node     | `skills/core/delegate`      |
-| Consolidate / self-improve      | `skills/core/reflect`       |
-| Absorb a new raw source         | `skills/wiki/ingest`        |
-| Answer from existing knowledge  | `skills/wiki/query`         |
-| Audit the wiki's health         | `skills/wiki/lint`          |
-| Add a child node                | `skills/assistants/add`     |
-| Remove a child node             | `skills/assistants/remove`  |
+## Architecture 
 
-Add a route as `| <trigger> | <skill path> |`, most specific first. Every route must resolve
-to a real skill directory under `skills/`.
+### Layout
+
+```
+assistant/
+├── AGENTS.md             # entry point for the assistant
+├── assistants/           # child assistants (each has its own memory, skills, sources and wiki)
+├── memory/               # assistant memory
+│   ├── core.md               # Layer 1 — identity and principles
+│   ├── procedural.md         # Layer 2 — layout and procedural hub / workflow index (this file)
+│   ├── declarative.md        # Layer 3 — current state facts
+│   └── working.md            # Layer 4 — working memory - activity log
+├── skills/               # workflow playbooks (Agent SKILL.md spec)
+│   ├── assistants/           # manage child assistants
+│   │   ├── add/              # add a new assistant
+│   │   ├── remove/           # remove an assistant
+│   ├── core/
+│   │   ├── init/             # initialize the assistant
+│   │   ├── reflect/          # reflect on the assistant's state
+│   │   └── delegate/         # delegate a task to a child assistant
+│   └── wiki/                 # wiki management skills
+│       ├── ingest/           # ingest a new wiki page
+│       ├── lint/             # audit the wiki's health
+│       └── query/            # query the wiki for information
+├── sources/              # immutable source documents (read & relocate, never edit content)
+│   ├── archive/              # archived sources (permanent)
+│   ├── inbox/                # drop zone: sources awaiting ingestion
+│   └── library/              # ingested sources (permanent)
+├── templates/            # wiki page templates
+└── wiki/                 # the compiled, interlinked knowledge base (persistent knowledge)
+    ├── index.md              # catalog of every wiki page
+    ├── schema.md             # schema of the wiki 
+    └── {{folder-name}}/      # domain specific folder(s) for wiki pages
+```
+
+### Memory
+
+The four memory layers and how information flows between them (mirrors human memory):
+
+| Layer | File | Holds | Promotes to |
+|---|---|---|---|
+| 1 — Principles | `memory/core.md` | Purpose, vision, principles (the *why*) | — |
+| 2 — Operational | `memory/procedural.md` + `skills/` | Workflows, conventions, schema (the *what/how*) | — |
+| 3 — Short-term | `memory/declarative.md` | Cross-session short-term memory | → Layer 2 / 1 |
+| 4 — Activity | `memory/working.md` | Append-only activity stream | → Layer 3 / 2 |
+
+
+
+
+## Operation Procedures
+
+### Bootstrapping
+
+Layer 2 → Layer 3 → Layer 4 is the retrieval path at the start of every request.
+
+**Before any work**, read this file, plus:
+- `memory/declarative.md` — entire file.
+- `memory/working.md` — the 5 most recent entries only (the log grows without bound; never read the whole file):
+
+  `grep "^- \[" memory/working.md | tail -5`
+
+To read a date range, scan entries cheaply first, then slice from the first one in range:
+```bash
+grep -n "^- \[" memory/working.md | tail -40   # recent entries with line numbers
+tail -n +<line> memory/working.md              # emit from that line onward
+```
+
+### Skill Routes
+
+This is how the assistant decides what to do. The skills themselves live in `skills/`; this layer only routes to the appropriate self-contained operational workflows. Load the one whose trigger matches the task; each skill is a folder holding a `SKILL.md` (Agent Skills format).
+
+
+| Trigger / intent                | Skill                                |
+| ------------------------------- | ------------------------------------ |
+| Personalize a fresh assistant    | `skills/core/init/SKILL.md`          |
+| Hand a task to a child assistant | `skills/core/delegate/SKILL.md`      |
+| Consolidate / self-improve       | `skills/core/reflect/SKILL.md`       |
+| Absorb a new raw source          | `skills/wiki/ingest/SKILL.md`        |
+| Answer from existing knowledge   | `skills/wiki/query/SKILL.md`         |
+| Audit the wiki's health          | `skills/wiki/lint/SKILL.md`          |
+| Add a child assistant            | `skills/assistants/add/SKILL.md`     |
+| Remove a child assistant         | `skills/assistants/remove/SKILL.md`  |
+
+
+### Logging
+
+Append every action, query, error, or event to `memory/working.md` (newest last). Every request will generate one or more log entries.
+
+Format, one line per trace, appended at the end (greppable):
+
+`- [YYYY-MM-DD HH:MM:SS] <skill | actor | event>: <title> - <what happened>`
+
+
+### Recording
+
+Route what you learn to its home (this operationalizes the *One fact, one home* principle):
+
+| Kind of information | Home |
+|---|---|
+| Any action, query, error, or event | `memory/working.md` — always |
+| Transient state with a shelf life (active tasks, deadlines, current context) | `memory/declarative.md` |
+| Durable knowledge for the human | `wiki/` — via `skills/wiki/ingest` or `query` |
+| A new repeatable workflow + its trigger | a skill under `skills/` + a route in **Skill Routes** |
+| A lasting principle (rare) | `memory/core.md` |
+
+### Conventions
+
+Global operating conventions for the assistant:
+
+- **Dates & timestamps:** Use today's actual date (check via shell if unsure) for `created`/`updated` fields and log entries. Convert relative dates ("last week", "in 3 days") to absolute `YYYY-MM-DD`.
+- **Secrets:** Record only *where* a secret lives (e.g. "1Password vault HomeLab", "in the `.env` on the host"), never the secret value itself.
+- **Changes:** Make small, frequent, well-described edits. It's a git repo of markdown — favour many focused commits over sweeping rewrites, and keep history clean.
+- **Cross-linking:** Use `[[wikilinks]]` liberally between related pages; a link to a not-yet-created page is a useful marker of work to do.
+- **Filenames:** kebab-case (`page-name.md`, `other-page.md`).
+- **Sources are immutable:** read and relocate between `sources/inbox → library/archive`; never edit a source's content.
+- **Reflect regularly:** run `skills/core/reflect` at session end, or when `working.md` accrues many un-consolidated entries, so durable learnings reach declarative/procedural/core before the log is compacted.
