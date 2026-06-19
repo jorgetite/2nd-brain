@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:gist.githubusercontent.com)",
+      "WebFetch(domain:arxiv.org)"
+    ]
+  }
+}
