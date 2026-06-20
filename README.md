@@ -1,8 +1,9 @@
 # 2nd Brain
 
-A framework for an everyday, AI-powered personal assistant — built entirely from markdown
-conventions, with **no runtime code**. It targets any agent harness that supports the `AGENTS.md`
-and `SKILL.md` standards and is agnostic of the underlying provider and model.
+A framework for an everyday, AI-powered personal assistant — built almost entirely from markdown
+conventions (the one exception: an optional shell script that scaffolds new assistants, with a
+markdown fallback). It targets any agent harness that supports the `AGENTS.md` and `SKILL.md`
+standards and is agnostic of the underlying provider and model.
 
 It is the synthesis of two ideas (see [docs/concepts.md](docs/concepts.md)):
 
@@ -13,7 +14,7 @@ It is the synthesis of two ideas (see [docs/concepts.md](docs/concepts.md)):
 
 ## How it works
 
-An assistant is a self-contained **node** — a directory the harness boots from:
+An assistant is a self-contained directory the harness boots from:
 
 ```
 assistant/
@@ -29,8 +30,8 @@ assistant/
 - **Memory** is layered like human memory; the `reflect` skill consolidates activity upward into
   durable learnings. See [docs/memory.md](docs/memory.md).
 - **Skills** are the operating procedures: `core/` (init, delegate, reflect), `wiki/` (ingest,
-  query, lint), `assistants/` (add, remove). `memory/procedural.md` routes intent → skill.
-- **Recursion** is structural: a node holds child nodes of the same shape, so an orchestrator can
+  query, lint), `assistants/` (create, remove). `memory/procedural.md` routes intent → skill.
+- **Recursion** is structural: an assistant holds child assistants of the same shape, so an orchestrator can
   coordinate domain assistants to any depth. See [docs/recursion.md](docs/recursion.md).
 
 ## Getting started
@@ -38,7 +39,7 @@ assistant/
 1. Clone this repo — the clone *is* your assistant (clone again for a separate, independent one).
 2. From the `assistant/` directory, run the `init` skill to set its identity, domain, and purpose.
 3. Drop material into `sources/inbox/` and run `ingest`; ask questions with `query`.
-4. Add specialized child assistants with the `add` skill when one domain isn't enough.
+4. Add specialized child assistants with the `create` skill when one domain isn't enough.
 
 ## License
 

@@ -1,6 +1,6 @@
 ---
 name: delegate
-description: Hand a task to a child assistant under assistants/ and integrate its result. Use when a request falls in a child's domain rather than this assistant's own. Requires at least one child (see add).
+description: Hand a task to a child assistant under assistants/ and integrate its result. Use when a request falls in a child's domain rather than this assistant's own. Requires at least one child (see create).
 ---
 
 # Delegate
@@ -11,7 +11,7 @@ recursive tree — and a child may delegate further down, same skill, next level
 ## Steps
 
 1. **Pick the child.** Match the task to a child in `assistants/` by its domain (read each child's
-   `memory/core.md` Identity if unsure). If none fits, stop and consider `skills/assistants/add`.
+   `memory/core.md` Identity if unsure). If none fits, stop and consider `skills/assistants/create`.
 2. **Invoke it scoped.** Launch the child as a sub-agent whose working directory is
    `assistants/<child>/`. It bootstraps from its own `AGENTS.md` and loads its own memory, skills,
    and wiki — pass only the task, not your context.

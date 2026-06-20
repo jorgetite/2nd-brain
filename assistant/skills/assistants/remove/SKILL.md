@@ -5,8 +5,8 @@ description: Remove a child assistant under assistants/. Confirm first and optio
 
 # Remove
 
-Prune a node from the tree. *Reversible by default* does not apply here — deletion is permanent, so
-confirm before acting.
+Prune an assistant from the tree. *Reversible by default* does not apply here — deletion is
+permanent, so confirm before acting.
 
 ## Steps
 
