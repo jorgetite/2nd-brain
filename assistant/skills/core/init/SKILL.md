@@ -10,7 +10,7 @@ Turn a domain-neutral assistant skeleton into a personalized one. Run from the a
 ## Steps
 
 1. **Confirm the memory contracts exist.** `create` (or a fresh clone) provides
-   `memory/{core,procedural,declarative,working}.md`. If any are missing, stop — the assistant
+   `memory/{core,procedural,state,journal}.md`. If any are missing, stop — the assistant
    wasn't scaffolded correctly; re-run `create` rather than improvising them here.
 2. **Interview the human** for: assistant name, domain (one clear area of responsibility), and
    purpose (one sentence). Ask; do not invent — *Truth over invention*.
@@ -31,7 +31,7 @@ Turn a domain-neutral assistant skeleton into a personalized one. Run from the a
    domain calls for skills beyond the defaults. Do not duplicate existing routes.
 6. **Verify completion.** `grep -R "{{" memory/core.md` must return nothing. (Any page templates
    you add under `templates/` keep their `{{...}}` — they're filled per page at ingest time.)
-7. **Log it.** Append an entry to `memory/working.md`.
+7. **Log it.** Append an entry to `memory/journal.md`.
 
 ## Done when
 

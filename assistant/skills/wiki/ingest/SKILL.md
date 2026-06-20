@@ -21,7 +21,7 @@ existing pages rather than appending duplicates.
 4. **Update `wiki/index.md`** — add/adjust the catalog entry for each created or renamed page.
 5. **Relocate the source** from `sources/inbox/` to `sources/library/` (it is now ingested and
    permanent).
-6. **Log it.** Append an entry to `memory/working.md` naming the source and the pages touched.
+6. **Log it.** Append an entry to `memory/journal.md` naming the source and the pages touched.
 
 ## Done when
 

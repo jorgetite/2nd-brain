@@ -5,7 +5,7 @@ An **assistant is a self-contained directory** with the same shape at every leve
 ```
 <assistant>/
 ├── AGENTS.md      # bootstrap
-├── memory/        # core, procedural, declarative, working
+├── memory/        # core, procedural, state, journal
 ├── skills/        # core/, wiki/, assistants/
 ├── sources/       # inbox → library/archive
 ├── templates/     # wiki page skeletons

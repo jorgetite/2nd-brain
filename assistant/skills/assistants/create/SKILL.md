@@ -24,7 +24,7 @@ must run standalone and as a child. This skill does the **mechanical scaffolding
 
 2. **Personalize.** Run `skills/core/init` scoped to `assistants/<name>/` to set the new assistant's identity, domain, and purpose.
 
-3. **Log it.** Append an entry to `memory/working.md`.
+3. **Log it.** Append an entry to `memory/journal.md`.
 
 ## Fallback (no shell available)
 

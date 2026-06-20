@@ -45,7 +45,7 @@ mkdir -p \
   "$CHILD/assistants"
 
 # memory: blank contracts from this skill's assets/
-cp "$ASSETS/core.md" "$ASSETS/procedural.md" "$ASSETS/declarative.md" "$ASSETS/working.md" \
+cp "$ASSETS/core.md" "$ASSETS/procedural.md" "$ASSETS/state.md" "$ASSETS/journal.md" \
   "$CHILD/memory/"
 
 # skills: inherit the parent's current skills (incl. create/ and its assets/)

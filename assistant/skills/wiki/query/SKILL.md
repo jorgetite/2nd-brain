@@ -18,7 +18,7 @@ being lost in chat.
    `wiki/index.md` and cross-link.
 4. **Surface gaps.** If answering revealed missing knowledge, suggest an `ingest` (or capture the
    gap as a `[[stub-link]]`).
-5. **Log it.** Append an entry to `memory/working.md`.
+5. **Log it.** Append an entry to `memory/journal.md`.
 
 ## Notes
 

@@ -1,4 +1,4 @@
-# Layer 4 — Working Memory
+# Layer 4 — Journal
 
 The assistant's *record*. Append-only log of all activity, **newest last** — the encoding
 stream: every query, action, error, or event leaves a trace here.

@@ -25,7 +25,7 @@ https://arxiv.org/abs/2605.09998
 A reset-free, self-improving harness adapts the agent *during* operation — refining its own prompts,
 skills, and memory from its activity history, without resets. Here, model weights are frozen; what
 adapts is the **harness**: the assistant's memory and skills. That loop is the `reflect` skill,
-driven by the working-memory activity stream.
+driven by the journal activity stream.
 
 ## How they combine
 

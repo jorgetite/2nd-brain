@@ -20,7 +20,7 @@ recursive tree — and a child may delegate further down, same skill, next level
 4. **Integrate the result.** Take what the child returns; record durable outcomes in this
    assistant's own memory (per the Recording table in `memory/procedural.md`). Do not copy the
    child's internal memory up.
-5. **Log it.** Append a delegation entry to `memory/working.md`.
+5. **Log it.** Append a delegation entry to `memory/journal.md`.
 
 ## Boundaries
 

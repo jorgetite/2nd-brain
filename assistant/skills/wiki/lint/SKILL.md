@@ -25,7 +25,7 @@ Scan `wiki/` pages and `wiki/index.md` for:
 1. Run the checks above.
 2. **Fix the unambiguous** (index sync, obvious broken links, filename casing).
 3. **Report the judgment calls** (contradictions, stale claims) to the human rather than guessing.
-4. **Log it.** Append a summary of what was fixed and what needs a decision to `memory/working.md`.
+4. **Log it.** Append a summary of what was fixed and what needs a decision to `memory/journal.md`.
 
 ## Done when
 

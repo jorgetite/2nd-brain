@@ -8,8 +8,8 @@ Identity and knowledge are kept separate: this is how the assistant *acts*; the 
 |---|---|---|---|
 | L1 Core | `core.md` | identity + stable principles (the *why*) | stable |
 | L2 Procedural | `procedural.md` + `skills/` | layout, rules, skill routing (the *what / how*) | slow-changing |
-| L3 Declarative | `declarative.md` | current-state facts (the *now*) | limited (entries expire) |
-| L4 Working | `working.md` | append-only activity log (the *record*) | unbounded append |
+| L3 State | `state.md` | current-state facts (the *now*) | limited (entries expire) |
+| L4 Journal | `journal.md` | append-only activity log (the *record*) | unbounded append |
 
 ## The consolidation loop
 
@@ -17,12 +17,16 @@ Information **encodes** at L4 (every action leaves a trace) and **consolidates u
 `reflect` skill — the capability-compounding loop:
 
 ```
-L4 working ──reflect──▶ L3 declarative · L2 procedural · L1 core · wiki
+L4 journal ──reflect──▶ L3 state · L2 procedural · L1 core · wiki
 ```
 
-`reflect` reads the working stream, promotes durable learnings to their real home (routed by the
-**Recording** table in `procedural.md`), prunes expired declarative entries, and compacts
-already-consolidated working entries so the log stays bounded.
+`reflect` reads the journal stream, promotes durable learnings to their real home (routed by the
+**Recording** table in `procedural.md`), prunes expired state entries, and compacts
+already-consolidated journal entries so the log stays bounded.
+
+## Capturing facts
+
+User-stated facts enter through the `remember` skill, which files each to the right layer — a short-lived note in `state` by default, durable knowledge into the `wiki/`, or a lasting preference into `core` — using the same Recording table `reflect` follows.
 
 ## Reading discipline
 

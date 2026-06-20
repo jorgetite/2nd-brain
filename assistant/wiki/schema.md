@@ -26,4 +26,4 @@ knowledge base curated from `sources/`. (This is Karpathy's "Schema" layer.) The
 - Every claim traces to a raw source in `sources/library/`.
 - The wiki is edited only through `skills/wiki/*` (ingest / query / lint), never freeform.
 - Durable knowledge for the user lives here; transient operational state belongs in
-  `memory/declarative.md`.
+  `memory/state.md`.

@@ -19,8 +19,8 @@ permanent, so confirm before acting.
    human declines.
 4. **Delete** `assistants/<name>/`.
 5. **Clean up references.** Remove any routes or notes that pointed at the child from
-   `memory/procedural.md` and `memory/declarative.md`.
-6. **Log it.** Append an entry to `memory/working.md` recording what was removed and what was
+   `memory/procedural.md` and `memory/state.md`.
+6. **Log it.** Append an entry to `memory/journal.md` recording what was removed and what was
    preserved.
 
 ## Done when

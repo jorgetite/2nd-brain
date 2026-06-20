@@ -1,4 +1,4 @@
-# Layer 3 — Declarative Memory
+# Layer 3 — State
 
 The assistant's *now*. Holds transient current-state facts — what is true right now about the
 human, active tasks, and context. Read in full at the start of every request.
