@@ -10,7 +10,7 @@ The assistant's *what and how*. Defines the architecture layout, the operating p
 ```
 assistant/
 ├── AGENTS.md             # entry point for the assistant
-├── assistants/           # child assistants (each has its own memory, skills, sources and wiki)
+├── assistants/           # child assistants; index.md is the roster `delegate` routes by
 ├── memory/               # assistant memory
 │   ├── core.md               # Layer 1 — identity and principles
 │   ├── procedural.md         # Layer 2 — layout and procedural hub / workflow index (this file)
@@ -62,6 +62,7 @@ Layer 2 → Layer 3 → Layer 4 is the retrieval path at the start of every requ
 
 **Before any work**, read this file, plus:
 - `memory/state.md` — entire file.
+- `assistants/index.md` — the roster of your direct children and their domains (empty if you have none).
 - `memory/journal.md` — the 5 most recent entries only (the log grows without bound; never read the whole file):
 
   `grep "^- \[" memory/journal.md | tail -5`
@@ -89,6 +90,11 @@ This is how the assistant decides what to do. The skills themselves live in `ski
 | Add a child assistant            | `skills/assistants/create/SKILL.md`  |
 | Remove a child assistant         | `skills/assistants/remove/SKILL.md`  |
 
+**Delegation & self-handling.** By default, **handle a request yourself**. Delegate (via
+`skills/core/delegate`) only when a child in `assistants/index.md` owns the request's domain — you
+know your children from bootstrap. With no children, or none fitting, handle it yourself. Creating a
+child assistant is a **human-initiated** action — never create one to satisfy a request.
+
 
 ### Logging
 
@@ -97,6 +103,8 @@ Append every action, query, error, or event to `memory/journal.md` (newest last)
 Format, one line per trace, appended at the end (greppable):
 
 `- [YYYY-MM-DD HH:MM:SS] <skill | actor | event>: <title> - <what happened>`
+
+The `reflect:` summary line that `skills/core/reflect` writes doubles as the **consolidation watermark** — every entry after the latest one is un-consolidated.
 
 
 ### Recording
@@ -121,4 +129,4 @@ Global operating conventions for the assistant:
 - **Cross-linking:** Use `[[wikilinks]]` liberally between related pages; a link to a not-yet-created page is a useful marker of work to do.
 - **Filenames:** kebab-case (`page-name.md`, `other-page.md`).
 - **Sources are immutable:** read and relocate between `sources/inbox → library/archive`; never edit a source's content.
-- **Reflect regularly:** run `skills/core/reflect` at session end, or when `journal.md` accrues many un-consolidated entries, so durable learnings reach state/procedural/core before the log is compacted.
+- **Reflect regularly:** run `skills/core/reflect` at session end, and/or once a batch of entries has accrued since the last `reflect:` watermark — sooner if a clear pattern emerged or `state` is about to expire; not after every action. Frequency matters: too often churns the slow-changing layers, too rarely stalls learning.

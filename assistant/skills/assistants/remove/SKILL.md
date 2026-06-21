@@ -18,8 +18,8 @@ permanent, so confirm before acting.
    `wiki/` pages or `sources/library/` into this assistant, or copy them aside. Skip only if the
    human declines.
 4. **Delete** `assistants/<name>/`.
-5. **Clean up references.** Remove any routes or notes that pointed at the child from
-   `memory/procedural.md` and `memory/state.md`.
+5. **Deregister.** Remove the child's row from `assistants/index.md`, plus any references to it in
+   `memory/state.md`.
 6. **Log it.** Append an entry to `memory/journal.md` recording what was removed and what was
    preserved.
 

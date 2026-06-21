@@ -4,12 +4,14 @@ The assistant's *record*. Append-only log of all activity, **newest last** — t
 stream: every query, action, error, or event leaves a trace here.
 
 It is the single comprehensive activity log for the assistant (the wiki keeps no separate log).
-`skills/core/reflect` reads this stream to consolidate durable learnings into the upper memory
-layers — see the Memory table in `memory/procedural.md` — then may compact already-consolidated
-entries to keep the file bounded.
+`skills/core/reflect` consolidates durable learnings from here into the upper memory layers (per the
+Recording table in `memory/procedural.md`), then **collapses** each consolidated block into one
+`reflect:` summary line. That summary line is the **watermark** — the next reflection processes only
+the entries after it, so history is kept in compressed form and the file stays bounded.
 
-It grows without bound: never read it in full. Slice the most recent entries (see Bootstrapping
-in `memory/procedural.md`).
+For normal reads, never load the whole file — slice the most recent entries (see Bootstrapping in
+`memory/procedural.md`). `reflect` is the exception: it reads every entry since the last `reflect:`
+watermark.
 
 ## Entries
 

@@ -28,12 +28,16 @@ assistant can be both: a child orchestrator under a higher one.
 
 | Skill | Does |
 |---|---|
-| `assistants/create` | scaffold a new assistant (script + `assets/`): blank memory, skills inherited from this assistant, personalize via `init` |
-| `assistants/remove` | retire a child (confirm + salvage first; irreversible) |
-| `core/delegate` | route a task to a child as a directory-scoped sub-agent |
+| `assistants/create` | scaffold a new assistant (script + `assets/`): blank memory, skills inherited from this assistant, personalize via `init`, register in `assistants/index.md` |
+| `assistants/remove` | retire a child (confirm + salvage first; deregister; irreversible) |
+| `core/delegate` | route a request to direct children via the `assistants/index.md` roster — parallel for independent parts, sequential for dependent ones — as directory-scoped sub-agents |
 
-`delegate` works identically at every level, so a task can flow root → child → grandchild, each
-assistant loading only its own context. Self-containment is the rule: an assistant runs standalone
+Children are tracked in each assistant's `assistants/index.md` roster (name → domain), loaded at
+bootstrap; `delegate` routes by it, `create` adds a row, `remove` removes one. By default an
+assistant **handles a request itself** — it delegates only when a roster child owns the domain, and
+**never creates a child** to satisfy a request (creating one is human-initiated). `delegate` works
+identically at every level, so a request flows root → child → grandchild, each assistant loading
+only its own context. Self-containment is the rule: an assistant runs standalone
 *and* as a child, and edits only its own memory and skills.
 
 See also: [concepts](concepts.md), [memory model](memory.md).

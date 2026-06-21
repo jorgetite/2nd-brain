@@ -9,6 +9,9 @@ compatibility: scripts/scaffold.sh needs a POSIX shell (sh) and standard coreuti
 Add a new assistant to the tree. The new assistant is identical in shape and self-contained — it
 must run standalone and as a child. This skill does the **mechanical scaffolding**; `init` does the **personalization**.
 
+Creating an assistant is **human-initiated** — run this at the human's request. An assistant never
+spins up a child on its own to handle a request; if no child fits, it handles the request itself.
+
 ## Steps
 
 1. **Scaffold.** Run this skill's `scripts/scaffold.sh` (from the assistant root):
@@ -24,7 +27,9 @@ must run standalone and as a child. This skill does the **mechanical scaffolding
 
 2. **Personalize.** Run `skills/core/init` scoped to `assistants/<name>/` to set the new assistant's identity, domain, and purpose.
 
-3. **Log it.** Append an entry to `memory/journal.md`.
+3. **Register.** Add a row to this assistant's `assistants/index.md` roster so `delegate` can route to the new child: `| <name> | <domain> | <one-line purpose> |`.
+
+4. **Log it.** Append an entry to `memory/journal.md`.
 
 ## Fallback (no shell available)
 
@@ -36,9 +41,9 @@ If the harness can't run scripts, build `assistants/<name>/` by hand for the sam
 - `wiki/index.md` — create empty; leave `templates/` empty.
 - `sources/{inbox,library,archive}/` and `assistants/` — create empty.
 
-Then continue with steps 2–3.
+Then continue with steps 2–4.
 
 ## Done when
 
-`assistants/<name>/` is a complete, personalized assistant that bootstraps on its own, and
-`delegate` can route to it.
+`assistants/<name>/` is a complete, personalized assistant that bootstraps on its own, is listed in
+`assistants/index.md`, and `delegate` can route to it.

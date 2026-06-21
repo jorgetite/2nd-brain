@@ -21,8 +21,9 @@ L4 journal ──reflect──▶ L3 state · L2 procedural · L1 core · wiki
 ```
 
 `reflect` reads the journal stream, promotes durable learnings to their real home (routed by the
-**Recording** table in `procedural.md`), prunes expired state entries, and compacts
-already-consolidated journal entries so the log stays bounded.
+**Recording** table in `procedural.md`), prunes expired state entries, and collapses
+each processed block into a `reflect:` summary line — the watermark for the next run, keeping
+history compressed and the file bounded.
 
 ## Capturing facts
 

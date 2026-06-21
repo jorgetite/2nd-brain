@@ -57,5 +57,16 @@ cp "$ASSISTANT_ROOT/AGENTS.md" "$CHILD/AGENTS.md"
 # wiki starts with only an empty index.md; templates/ starts empty
 : > "$CHILD/wiki/index.md"
 
+# assistants/ starts with an empty child roster
+cat > "$CHILD/assistants/index.md" <<'ROSTER'
+# Assistants
+
+Roster of this assistant's direct children. `skills/core/delegate` reads it to route a request;
+`skills/assistants/create` adds a row, `skills/assistants/remove` deletes one.
+
+| Assistant | Domain | Notes |
+|---|---|---|
+ROSTER
+
 echo "Created new assistant at: $CHILD"
 echo "Next: run 'init' scoped to assistants/$name to personalize it."
