@@ -29,6 +29,8 @@ history compressed and the file bounded.
 
 User-stated facts enter through the `remember` skill, which files each to the right layer — a short-lived note in `state` by default, durable knowledge into the `wiki/`, or a lasting preference into `core` — using the same Recording table `reflect` follows.
 
+Within `state`, a fact anchored to a specific date goes to *Upcoming Deadlines* and anything open-ended to *Entries*. `ingest` also mirrors a source's time-sensitive facts into `state` while filing the durable knowledge to the wiki. When a deadline passes, `reflect` promotes anything of lasting significance to the wiki/journal, then drops it.
+
 ## Reading discipline
 
 Bootstrapping loads L1 → L3 in full; the L4 log is never read whole (it grows without bound) — only

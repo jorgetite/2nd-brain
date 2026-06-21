@@ -12,9 +12,12 @@ per the **Recording table** in `memory/procedural.md`.
 
 1. **Take the fact** the user wants kept.
 2. **Classify and file it:**
-   - **Transient state** — a reminder, deadline, or current-context fact with a shelf life →
-     append to `memory/state.md` as `- [recorded: YYYY-MM-DD] [expires: YYYY-MM-DD | review] — <fact>`.
-     Infer or ask for an expiry; use `review` if unclear. *(default)*
+   - **Transient state** with a shelf life → `memory/state.md`, routed by date *(default)*:
+     - **Anchored to a specific future date** (due date, appointment, renewal, event) → add a row to
+       *Upcoming Deadlines*: `| YYYY-MM-DD | <description> |`.
+     - **Open-ended / current context** → add to *Entries*:
+       `- [recorded: YYYY-MM-DD] [expires: YYYY-MM-DD | review] — <fact>`. Infer or ask for an expiry;
+       use `review` if unclear.
    - **Durable knowledge for the human** — a fact worth keeping long-term → hand off to
      `skills/wiki/ingest` so it becomes a wiki page.
    - **A lasting preference or principle** about how the assistant should behave → add it to

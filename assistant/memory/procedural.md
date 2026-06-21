@@ -48,7 +48,7 @@ The four memory layers and how information flows between them (mirrors human mem
 |---|---|---|---|
 | 1 — Principles | `memory/core.md` | Purpose, vision, principles (the *why*) | — |
 | 2 — Operational | `memory/procedural.md` + `skills/` | Workflows, conventions, schema (the *what/how*) | — |
-| 3 — State | `memory/state.md` | Cross-session short-term state | → Layer 2 / 1 |
+| 3 — State | `memory/state.md` | Cross-session short-term state | → Layer 2 / 1 / wiki |
 | 4 — Journal | `memory/journal.md` | Append-only activity stream | → Layer 3 / 2 |
 
 
@@ -113,10 +113,12 @@ Route what you learn to its home (this operationalizes the *One fact, one home* 
 | Kind of information | Home |
 |---|---|
 | Any action, query, error, or event | `memory/journal.md` — always |
-| Transient state with a shelf life (active tasks, deadlines, current context) | `memory/state.md` |
+| Transient state with a shelf life (active tasks, deadlines, current context) | `memory/state.md` — date-anchored → *Upcoming Deadlines*, open-ended → *Entries* |
 | Durable knowledge for the human | `wiki/` — via `skills/wiki/ingest` or `query` |
 | A new repeatable workflow + its trigger | a skill under `skills/` + a route in **Skill Routes** |
 | A lasting principle (rare) | `memory/core.md` |
+
+`skills/wiki/ingest` also mirrors a source's time-sensitive facts into `memory/state.md` (by the date rule above) while filing the durable knowledge to the `wiki/`.
 
 ### Conventions
 

@@ -33,10 +33,14 @@ This skill owns its own read; do not use the cheap session-start read from Boots
 3. **Route each promotion by the Recording table** in `memory/procedural.md` (consult it; do not
    copy it). In short: durable knowledge for the human → `wiki/` via `skills/wiki/ingest`; a new
    repeatable workflow → a skill under `skills/` **and** a route in `procedural.md`; a lasting
-   principle → `memory/core.md`; still-current short-lived state → `memory/state.md`.
+   principle → `memory/core.md`; still-current short-lived state → `memory/state.md` (date-anchored →
+   *Upcoming Deadlines*, open-ended → *Entries*). De-dup: if a state fact was already recorded directly,
+   update it in place rather than adding a copy.
 
-4. **Prune state.** In `memory/state.md`, drop entries past their `expires` date and re-evaluate
-   `review` entries.
+4. **Prune state (promote, then drop).** In `memory/state.md`, for any deadline whose date has passed
+   or Entry past its `expires`: first record anything of lasting significance — the outcome to a dated
+   note in the `wiki/`, or a minor line in `memory/journal.md` — then remove it. Re-evaluate `review`
+   entries; drop items with no lasting value.
 
 5. **Compact by collapsing.** Replace the un-consolidated block you just processed with a single
    summary line — this both bounds the journal and becomes the next watermark:

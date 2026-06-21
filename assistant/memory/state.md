@@ -3,11 +3,21 @@
 The assistant's *now*. Holds transient current-state facts — what is true right now about the
 human, active tasks, and context. Read in full at the start of every request.
 
-Every entry is short-lived and carries an expiry. `skills/core/reflect` prunes expired entries
-and promotes durable ones to their real home — Core, Procedural, or the `wiki/` — following the
-Recording table in `memory/procedural.md`. Keep this file lean (well under 100 lines).
+Every entry is short-lived and carries an expiry. Keep this file lean (well under 100 lines).
 
-Sections below are organizational; add or remove them as the domain needs.
+**Where a fact goes (route by date):**
+- **Anchored to a specific future date** (due date, appointment, renewal, event) → *Upcoming Deadlines*.
+- **Open-ended or to re-evaluate later** (current context, active-task status, temporary preference)
+  → *Entries*.
+
+**On expiry — promote, then drop.** When a deadline's date passes (or an Entry's `expires` is reached),
+`skills/core/reflect` first records anything of lasting significance to its real home — the outcome to
+a dated note in the `wiki/`, or, if minor, a line in `memory/journal.md` — and **then** removes it from
+this file. Items with no lasting value are simply dropped. (Durable facts and lasting principles are
+promoted to the `wiki/` / `core.md` per the Recording table in `memory/procedural.md`.)
+
+Surface **imminent or overdue** deadlines to the human when relevant — this file is read in full at the
+start of every request.
 
 ## Upcoming Deadlines
 

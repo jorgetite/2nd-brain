@@ -48,7 +48,7 @@ The four memory layers and how information flows between them (mirrors human mem
 |---|---|---|---|
 | 1 — Principles | `memory/core.md` | Purpose, vision, principles (the *why*) | — |
 | 2 — Operational | `memory/procedural.md` + `skills/` | Workflows, conventions, schema (the *what/how*) | — |
-| 3 — State | `memory/state.md` | Cross-session short-term state | → Layer 2 / 1 |
+| 3 — State | `memory/state.md` | Cross-session short-term state | → Layer 2 / 1 / wiki |
 | 4 — Journal | `memory/journal.md` | Append-only activity stream | → Layer 3 / 2 |
 
 
@@ -65,17 +65,21 @@ Layer 2 → Layer 3 → Layer 4 is the retrieval path at the start of every requ
 - `assistants/index.md` — the roster of your direct children and their domains (empty if you have none).
 - `memory/journal.md` — the 5 most recent entries only (the log grows without bound; never read the whole file):
 
-  `grep "^- \[" memory/journal.md | tail -5`
+  `grep "^- \[" memory/journal.md | tail -10`
 
 To read a date range, scan entries cheaply first, then slice from the first one in range:
 ```bash
-grep -n "^- \[" memory/journal.md | tail -40   # recent entries with line numbers
+grep -n "^- \[" memory/journal.md | tail -50   # recent entries with line numbers
 tail -n +<line> memory/journal.md              # emit from that line onward
 ```
 
-### Skill Routes
+### Routing
 
-This is how the assistant decides what to do. The skills themselves live in `skills/`; this layer only routes to the appropriate self-contained operational workflows. Load the one whose trigger matches the task; each skill is a folder holding a `SKILL.md` (Agent Skills format).
+**Delegation & self-handling.** By default, **handle a request yourself**. Delegate (via
+`skills/core/delegate`) only when a child in `assistants/index.md` owns the request's domain — you
+know your children from bootstrap. With no children, or none fitting, handle it yourself. Creating a child assistant is a **human-initiated** action — never create one to satisfy a request.
+
+**Skill routing.** This is how the assistant decides what to do. The skills themselves live in `skills/`; this layer only routes to the appropriate self-contained operational workflows. Load the one whose trigger matches the task; each skill is a folder holding a `SKILL.md` (Agent Skills format).
 
 
 | Trigger / intent                 | Skill                                |
@@ -89,11 +93,6 @@ This is how the assistant decides what to do. The skills themselves live in `ski
 | Audit the wiki's health          | `skills/wiki/lint/SKILL.md`          |
 | Add a child assistant            | `skills/assistants/create/SKILL.md`  |
 | Remove a child assistant         | `skills/assistants/remove/SKILL.md`  |
-
-**Delegation & self-handling.** By default, **handle a request yourself**. Delegate (via
-`skills/core/delegate`) only when a child in `assistants/index.md` owns the request's domain — you
-know your children from bootstrap. With no children, or none fitting, handle it yourself. Creating a
-child assistant is a **human-initiated** action — never create one to satisfy a request.
 
 
 ### Logging
@@ -114,10 +113,12 @@ Route what you learn to its home (this operationalizes the *One fact, one home* 
 | Kind of information | Home |
 |---|---|
 | Any action, query, error, or event | `memory/journal.md` — always |
-| Transient state with a shelf life (active tasks, deadlines, current context) | `memory/state.md` |
+| Transient state with a shelf life (active tasks, deadlines, current context) | `memory/state.md` — date-anchored → *Upcoming Deadlines*, open-ended → *Entries* |
 | Durable knowledge for the human | `wiki/` — via `skills/wiki/ingest` or `query` |
 | A new repeatable workflow + its trigger | a skill under `skills/` + a route in **Skill Routes** |
 | A lasting principle (rare) | `memory/core.md` |
+
+`skills/wiki/ingest` also mirrors a source's time-sensitive facts into `memory/state.md` (by the date rule above) while filing the durable knowledge to the `wiki/`.
 
 ### Conventions
 
