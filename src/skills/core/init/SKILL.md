@@ -9,9 +9,9 @@ Turn a domain-neutral assistant skeleton into a personalized one. Run from the a
 
 ## Steps
 
-1. **Confirm the memory contracts exist.** `create` (or a fresh clone) provides
-   `memory/{core,procedural,state,journal}.md`. If any are missing, stop — the assistant
-   wasn't scaffolded correctly; re-run `create` rather than improvising them here.
+1. **Confirm the memory contracts exist.** The build from `src/` (via the scaffold) provides
+   `memory/{core,procedural,state,journal}.md`. If any are missing, stop — the assistant wasn't built
+   correctly; re-build from `src/` rather than improvising them here.
 2. **Interview the human** for: assistant name, domain (one clear area of responsibility), and
    purpose (one sentence). Ask; do not invent — *Truth over invention*.
 3. **Fill `memory/core.md`.** Replace `{{assistant-name}}`, `{{domain}}`, `{{purpose}}`. Leave the

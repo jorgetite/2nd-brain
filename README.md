@@ -9,10 +9,13 @@ It is the synthesis of two ideas (see [docs/concepts.md](docs/concepts.md)):
 
 ## How it works
 
-An assistant is a self-contained directory the harness boots from:
+The framework **source** lives in `src/` (version-controlled): `AGENTS.md`, the blank `memory/`
+contracts, and `skills/`. You **build** a working assistant from it into `assistant/` (gitignored) —
+the built instance is what the harness boots from, and it evolves freely at runtime without touching
+the tracked source. A built assistant is a self-contained directory:
 
 ```
-assistant/
+assistant/   (built from src/, gitignored)
 ├── AGENTS.md      # entrypoint: bootstrap, then act
 ├── memory/        # 4-layer memory — core · procedural · state · journal
 ├── skills/        # SKILL.md playbooks — core/ · wiki/ · assistants/
@@ -32,16 +35,24 @@ assistant/
 ## Quick Start
 
 1. Clone this repo.
-2. Point your harness to the `assistant/` directory.
-3. From the `assistant/` directory, run the `init` skill to set its identity, domain, and purpose.
+2. **Build** the working assistant from the source: `sh ./scaffold.sh assistant`
+3. Point your harness to the `assistant/` directory and run the `init` skill to set its identity,
+   domain, and purpose.
 4. Drop material into `sources/inbox/` and run `ingest`; ask questions with `query`.
 5. Add specialized child assistants with the `create` skill when one domain isn't enough.
+
+> `src/` is the only version-controlled part; `assistant/` is a build artifact that evolves as you
+> use it (the build adds a root instance to `.gitignore` automatically, and refuses to build outside
+> the project). Rebuild or reset it any time from `src/`.
 
 ## Using with Claude Co-Work
 
 To use this assistant with Claude Co-Work, first set up your Claude Co-Work environment and then point Claude Co-Work to the `assistant/` directory or create a project pointing to the `assistant/` directory.
 
 ### Initializing the Assistant
+
+If `assistant/` doesn't exist yet (a fresh clone only has `src/`), build it first:
+`sh ./scaffold.sh assistant`.
 
 Start a new task in Claude Co-Work and ensure your working directory is the `assistant/` directory.
 
@@ -119,7 +130,7 @@ The framework is markdown conventions only (the lone exception is `create`'s opt
 - **Four-layer memory.** `core` (identity & principles) · `procedural` (layout, routes, conventions) · `state` (short-lived state) · `journal` (append-only activity log). `reflect` consolidates upward and is the self-improvement loop. See [docs/memory.md](docs/memory.md).
 - **Skills** are self-contained `SKILL.md` procedures under `skills/{core,wiki,assistants}/`, routed from `memory/procedural.md`. They follow the [Agent Skills spec](https://agentskills.io/specification).
 - **Knowledge vs. memory.** `wiki/` is durable, user-facing knowledge curated from `sources/`; `memory/` is the assistant's own operating state. The two are kept separate.
-- **New assistants** are built by `skills/assistants/create`: `scripts/scaffold.sh` copies the parent's skills and `AGENTS.md` and seeds blank memory from `create/assets/`. Those `assets/` are the canonical baseline — **when you change the memory contracts under `assistant/memory/`, re-sync `create/assets/` or new assistants inherit the old ones.**
+- **Source vs. instance (dev/build split).** `src/` is the only version-controlled tree — `AGENTS.md`, the blank `memory/` contracts, and `skills/`. A working `assistant/` is built from it by the root `scaffold.sh` and is gitignored; it evolves its own memory and skills at runtime without touching `src/`. New children are built the same way — **pristine from `src/`** — so there is a single source of truth and no template to keep in sync.
 
 See also [docs/concepts.md](docs/concepts.md) for the two foundational ideas, and `CLAUDE.md` for guidance on working on the framework itself.
 

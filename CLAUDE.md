@@ -54,18 +54,21 @@ The LLM Wiki is the **knowledge that compounds**; the Continual Harness is the *
 
 ```
 .
-├── assistant/            # the root assistant (a recursive unit — see docs/recursion.md)
+├── scaffold.sh           # TRACKED — build tool: instantiate an assistant from src/ at a target
+├── src/                  # TRACKED — the framework source (the only versioned resources)
 │   ├── AGENTS.md         #   entrypoint: bootstrap, then act
-│   ├── memory/           #   4-layer memory: core, procedural, state, journal
-│   ├── skills/           #   SKILL.md playbooks: core/, wiki/, assistants/
-│   ├── sources/          #   raw source pipeline: inbox → library/archive
-│   ├── templates/        #   wiki page skeletons
-│   ├── wiki/             #   curated knowledge base (index.md, schema.md, pages)
-│   └── assistants/       #   child nodes, each an identical assistant
+│   ├── memory/           #   blank 4-layer contracts: core, procedural, state, journal
+│   └── skills/           #   SKILL.md playbooks: core/, wiki/, assistants/
+├── assistant/            # GITIGNORED — a working instance built from src/ (a recursive unit;
+│                         #   see docs/recursion.md). Gains sources/, templates/, wiki/, assistants/
+│                         #   at build/runtime, and evolves its own memory & skills.
 ├── docs/                 # concepts, memory model, recursion
 ├── README.md
 └── CLAUDE.md
 ```
+
+Build a working instance with `sh ./scaffold.sh assistant`. Only `src/` (and `scaffold.sh`) are
+version-controlled; the runtime tree under `assistant/` is regenerable and not tracked.
 
 
 ## MUST FOLLOW PRINCIPLES
