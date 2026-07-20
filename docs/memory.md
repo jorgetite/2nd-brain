@@ -1,8 +1,8 @@
 # Memory Model
 
 Operational memory is four layers, mirroring human memory. They live in `assistant/memory/`.
-Identity and knowledge are kept separate: this is how the assistant *acts*; the `wiki/` is what it
-*knows* for the human.
+Identity and knowledge are kept separate: this is how the assistant *acts*; the `bundles/` are what
+it *knows* for the human.
 
 | Layer | File | Holds | Lifespan |
 |---|---|---|---|
@@ -17,7 +17,7 @@ Information **encodes** at L4 (every action leaves a trace) and **consolidates u
 `reflect` skill — the capability-compounding loop:
 
 ```
-L4 journal ──reflect──▶ L3 state · L2 procedural · L1 core · wiki
+L4 journal ──reflect──▶ L3 state · L2 procedural · L1 core · bundles
 ```
 
 `reflect` reads the journal stream, promotes durable learnings to their real home (routed by the
@@ -27,13 +27,13 @@ history compressed and the file bounded.
 
 ## Capturing facts
 
-User-stated facts enter through the `remember` skill, which files each to the right layer — a short-lived note in `state` by default, durable knowledge into the `wiki/`, or a lasting preference into `core` — using the same Recording table `reflect` follows.
+User-stated facts enter through the `remember` skill, which files each to the right layer — a short-lived note in `state` by default, durable knowledge into a `bundle`, or a lasting preference into `core` — using the same Recording table `reflect` follows.
 
-Within `state`, a fact anchored to a specific date goes to *Upcoming Deadlines* and anything open-ended to *Entries*. `ingest` also mirrors a source's time-sensitive facts into `state` while filing the durable knowledge to the wiki. When a deadline passes, `reflect` promotes anything of lasting significance to the wiki/journal, then drops it.
+Within `state`, a fact anchored to a specific date goes to *Upcoming Deadlines* and anything open-ended to *Entries*. `ingest` also mirrors a source's time-sensitive facts into `state` while filing the durable knowledge to a bundle. When a deadline passes, `reflect` promotes anything of lasting significance to a bundle/journal, then drops it.
 
 ## Reading discipline
 
 Bootstrapping loads L1 → L3 in full; the L4 log is never read whole (it grows without bound) — only
 its recent tail is sliced. See the **Bootstrapping** section in `procedural.md`.
 
-See also: [concepts](concepts.md), [recursion](recursion.md).
+See also: [concepts](concepts.md), [bundles](bundles.md).

@@ -3,7 +3,8 @@
 The assistant's *record*. Append-only log of all activity, **newest last** — the encoding
 stream: every query, action, error, or event leaves a trace here.
 
-It is the single comprehensive activity log for the assistant (the wiki keeps no separate log).
+It is the assistant's operational activity log; each bundle keeps its own OKF `log.md` for its
+knowledge-change history.
 `skills/core/reflect` consolidates durable learnings from here into the upper memory layers (per the
 Recording table in `memory/procedural.md`), then **collapses** each consolidated block into one
 `reflect:` summary line. That summary line is the **watermark** — the next reflection processes only

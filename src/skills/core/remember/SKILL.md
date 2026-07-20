@@ -1,6 +1,6 @@
 ---
 name: remember
-description: Capture a fact the user wants kept and file it to the right memory layer — short-lived state by default, durable knowledge to the wiki, lasting preferences to core — then journal it. Use when the user says remember/note/save this, or wants something kept for later.
+description: Capture a fact the user wants kept and file it to the right memory layer — short-lived state by default, durable knowledge to a bundle, lasting preferences to core — then journal it. Use when the user says remember/note/save this, or wants something kept for later.
 ---
 
 # Remember
@@ -19,7 +19,7 @@ per the **Recording table** in `memory/procedural.md`.
        `- [recorded: YYYY-MM-DD] [expires: YYYY-MM-DD | review] — <fact>`. Infer or ask for an expiry;
        use `review` if unclear.
    - **Durable knowledge for the human** — a fact worth keeping long-term → hand off to
-     `skills/wiki/ingest` so it becomes a wiki page.
+     `skills/bundles/ingest` so it becomes a concept in the right bundle.
    - **A lasting preference or principle** about how the assistant should behave → add it to
      `memory/core.md`.
 3. **Confirm** to the user what you saved and where.

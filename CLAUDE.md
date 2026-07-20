@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A framework for an everyday, AI-powered personal assistant ("2nd brain"). It is deliberately **harness-agnostic and provider/model-agnostic**: it targets any agent harness that supports the `AGENTS.md` and `SKILL.md` standards, and assumes nothing about the underlying LLM provider or model. Licensed under MIT.
 
-The framework is **customizable and extensible across distinct domains**, and its design is **recursive**: assistants can oversee, manage, and communicate with other assistants. A typical deployment has specialized **domain assistants** (each owning one domain) coordinated by an **orchestrator assistant** that routes tasks and brokers communication across domains.
+The framework is **customizable and extensible across distinct domains**. A single assistant covers multiple domains by managing several **OKF knowledge bundles** (one per domain) under `bundles/` — the knowledge base is a set of portable, [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) markdown bundles rather than a single wiki.
 
 ## The two foundational concepts
 
@@ -16,21 +16,21 @@ The architecture is the synthesis of two ideas. Understanding both is prerequisi
 
 Source: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
 
-Instead of re-retrieving and re-synthesizing knowledge on every query (classic RAG), the assistant **incrementally builds and maintains a persistent, LLM-authored wiki** of markdown that compounds over time. Three layers:
+Instead of re-retrieving and re-synthesizing knowledge on every query (classic RAG), the assistant **incrementally builds and maintains persistent, LLM-authored markdown** that compounds over time. Here that knowledge is stored as one or more [OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) bundles under `bundles/`. Three layers:
 
-- **Raw Sources** — immutable input documents (articles, papers, notes, data).
-- **The Wiki** — LLM-generated/maintained markdown: summaries, entity pages, cross-references.
-- **The Schema** — a config document defining wiki structure and workflows.
+- **Raw Sources** — immutable input documents (articles, papers, notes, data) under `sources/`.
+- **The Bundles** — LLM-maintained OKF concepts: markdown files under `bundles/<name>/`, each carrying a required `type:` in YAML frontmatter, cross-linked with absolute bundle-relative links.
+- **The Schema** — OKF's free-string concept `type` plus each bundle's own `templates/` skeletons (there is no separate schema file).
 
 Three core operations define the lifecycle:
 
-- **Ingest** — extract from new sources, integrate across existing pages, update indexes and cross-references.
-- **Query** — search relevant pages, synthesize an answer, and **file valuable results back into the wiki** rather than losing them in chat history.
-- **Lint** — periodically audit for contradictions, stale claims, orphaned pages, and missing links.
+- **Ingest** — extract from new sources, integrate across existing concepts, update the bundle's index and log.
+- **Query** — search relevant concepts, synthesize an answer, and **file valuable results back into a bundle** rather than losing them in chat history.
+- **Lint** — periodically audit for OKF conformance, contradictions, stale claims, orphaned concepts, and broken links.
 
-Navigation relies on two special files: `index.md` (catalog by category) and `log.md` (chronological record of ingests/modifications). The key insight: the expensive part of a knowledge base is the *bookkeeping*, so that work is delegated to the LLM.
+Within each bundle, navigation relies on two reserved files: `index.md` (a progressive-disclosure listing) and `log.md` (chronological, newest-first change history). A `bundles/index.md` catalog lists the bundles themselves. The key insight: the expensive part of a knowledge base is the *bookkeeping*, so that work is delegated to the LLM.
 
-> Note: this project's own agent memory (under the harness's memory directory) follows the same spirit — one fact per file, an index that points at them, links between related facts. The user-facing wiki and the agent's operational memory are distinct stores; keep them separate.
+> Note: this project's own agent memory (under the harness's memory directory) follows the same spirit — one fact per file, an index that points at them, links between related facts. The user-facing bundles and the agent's operational memory are distinct stores; keep them separate.
 
 ### 2. Continual Harness — the self-improvement layer
 
@@ -40,35 +40,35 @@ A **reset-free, self-improving harness** wraps the foundation model with tools, 
 
 ### How they combine here
 
-The LLM Wiki is the **knowledge that compounds**; the Continual Harness is the **capability that compounds**. The framework treats both the wiki (what the assistant knows) and the assistant's own skills/prompts/sub-agents (how the assistant acts) as living artifacts the assistant maintains over time. When extending the framework, ask which layer a change belongs to: knowledge (wiki ingest/query/lint) or capability (skills, sub-agents, prompts, harness behavior).
+The LLM Wiki is the **knowledge that compounds**; the Continual Harness is the **capability that compounds**. The framework treats both the bundles (what the assistant knows) and the assistant's own skills/prompts/memory (how the assistant acts) as living artifacts the assistant maintains over time. When extending the framework, ask which layer a change belongs to: knowledge (bundles ingest/query/lint) or capability (skills, prompts, memory, harness behavior).
 
 ## Architecture
 
-### Recursive Orchestration
+### Multi-Bundle Knowledge
 
-- A **domain assistant** is defined by its `AGENTS.md` (operating instructions, scope, constraints) plus the `SKILL.md` skills it can invoke and the slice of the wiki it owns.
-- An **orchestrator assistant** is itself an assistant whose "domain" is coordination: it decomposes tasks, dispatches to domain assistants, and relays communication between them. Because the model is recursive, an orchestrator can itself be a domain assistant under a higher-level orchestrator.
-- Keep this composability intact: a new domain assistant should be self-contained (its own AGENTS.md, skills, and wiki slice) so it works standalone *and* as a child under an orchestrator.
+- A single assistant owns its knowledge as **one or more OKF bundles** under `bundles/`, one per domain. The `bundles/index.md` catalog lists them and is loaded at bootstrap.
+- Each bundle is a self-contained OKF markdown tree — its own `index.md`, `log.md`, per-type `templates/`, and `type`-tagged concept files — so it stays portable and can be shared or moved independently.
+- Adding a bundle is human-initiated: `skills/bundles/create` generates a new empty bundle, or `skills/bundles/import` adopts an existing OKF bundle authored elsewhere; `skills/bundles/remove` retires one (destructive, confirms first). `ingest`/`query`/`lint` operate on the appropriate bundle chosen from the catalog.
 
 ### Project Structure
 
 ```
 .
-├── scaffold.sh           # TRACKED — build tool: instantiate an assistant from src/ at a target
+├── install.sh            # TRACKED — installer: install an assistant from src/ into a target path
 ├── src/                  # TRACKED — the framework source (the only versioned resources)
 │   ├── AGENTS.md         #   entrypoint: bootstrap, then act
 │   ├── memory/           #   blank 4-layer contracts: core, procedural, state, journal
-│   └── skills/           #   SKILL.md playbooks: core/, wiki/, assistants/
-├── assistant/            # GITIGNORED — a working instance built from src/ (a recursive unit;
-│                         #   see docs/recursion.md). Gains sources/, templates/, wiki/, assistants/
-│                         #   at build/runtime, and evolves its own memory & skills.
-├── docs/                 # concepts, memory model, recursion
+│   └── skills/           #   SKILL.md playbooks: core/, bundles/
+├── assistant/            # GITIGNORED — a working instance installed from src/. Gains sources/ and
+│                         #   bundles/ at install/runtime, and evolves its own memory & skills.
+├── docs/                 # concepts, memory model, bundles
 ├── README.md
 └── CLAUDE.md
 ```
 
-Build a working instance with `sh ./scaffold.sh assistant`. Only `src/` (and `scaffold.sh`) are
-version-controlled; the runtime tree under `assistant/` is regenerable and not tracked.
+Install a working instance with `sh ./install.sh <target>` (e.g. `sh ./install.sh assistant`). Only
+`src/` (and `install.sh`) are version-controlled; an installed instance is regenerable and not
+tracked.
 
 
 ## MUST FOLLOW PRINCIPLES

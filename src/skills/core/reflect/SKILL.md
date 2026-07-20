@@ -31,7 +31,7 @@ This skill owns its own read; do not use the cheap session-start read from Boots
    One-offs and routine actions are *not* promoted — they fall away when the journal is compacted.
 
 3. **Route each promotion by the Recording table** in `memory/procedural.md` (consult it; do not
-   copy it). In short: durable knowledge for the human → `wiki/` via `skills/wiki/ingest`; a new
+   copy it). In short: durable knowledge for the human → a bundle via `skills/bundles/ingest`; a new
    repeatable workflow → a skill under `skills/` **and** a route in `procedural.md`; a lasting
    principle → `memory/core.md`; still-current short-lived state → `memory/state.md` (date-anchored →
    *Upcoming Deadlines*, open-ended → *Entries*). De-dup: if a state fact was already recorded directly,
@@ -39,7 +39,7 @@ This skill owns its own read; do not use the cheap session-start read from Boots
 
 4. **Prune state (promote, then drop).** In `memory/state.md`, for any deadline whose date has passed
    or Entry past its `expires`: first record anything of lasting significance — the outcome to a dated
-   note in the `wiki/`, or a minor line in `memory/journal.md` — then remove it. Re-evaluate `review`
+   concept in a bundle, or a minor line in `memory/journal.md` — then remove it. Re-evaluate `review`
    entries; drop items with no lasting value.
 
 5. **Compact by collapsing.** Replace the un-consolidated block you just processed with a single

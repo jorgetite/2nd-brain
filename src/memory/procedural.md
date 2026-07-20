@@ -10,34 +10,36 @@ The assistant's *what and how*. Defines the architecture layout, the operating p
 ```
 assistant/
 ├── AGENTS.md             # entry point for the assistant
-├── assistants/           # child assistants; index.md is the roster `delegate` routes by
 ├── memory/               # assistant memory
 │   ├── core.md               # Layer 1 — identity and principles
 │   ├── procedural.md         # Layer 2 — layout and procedural hub / workflow index (this file)
 │   ├── state.md              # Layer 3 — current state facts
 │   └── journal.md            # Layer 4 — append-only activity log
 ├── skills/               # workflow playbooks (Agent SKILL.md spec)
-│   ├── assistants/           # manage child assistants
-│   │   ├── create/           # create a new assistant
-│   │   ├── remove/           # remove an assistant
 │   ├── core/
 │   │   ├── init/             # initialize the assistant
 │   │   ├── reflect/          # reflect on the assistant's state
-│   │   ├── delegate/         # delegate a task to a child assistant
 │   │   └── remember/         # record a fact to the right memory layer
-│   └── wiki/                 # wiki management skills
-│       ├── ingest/           # ingest a new wiki page
-│       ├── lint/             # audit the wiki's health
-│       └── query/            # query the wiki for information
+│   └── bundles/              # OKF knowledge-bundle skills
+│       ├── create/           # create a new OKF bundle
+│       ├── import/           # adopt an existing OKF bundle
+│       ├── ingest/           # ingest a source into a bundle
+│       ├── lint/             # audit a bundle's OKF conformance & health
+│       ├── query/            # query a bundle for information
+│       └── remove/           # retire a bundle
 ├── sources/              # immutable source documents (read & relocate, never edit content)
 │   ├── archive/              # archived sources (permanent)
 │   ├── inbox/                # drop zone: sources awaiting ingestion
 │   └── library/              # ingested sources (permanent)
-├── templates/            # wiki page templates
-└── wiki/                 # the compiled, interlinked knowledge base (persistent knowledge)
-    ├── index.md              # catalog of every wiki page
-    ├── schema.md             # schema of the wiki 
-    └── {{folder-name}}/      # domain specific folder(s) for wiki pages
+└── bundles/              # OKF knowledge bundles (persistent knowledge)
+    ├── index.md              # catalog of every bundle (progressive disclosure)
+    └── {{bundle-name}}/      # an OKF-compliant bundle
+        ├── index.md              # OKF listing (may carry `okf_version: "0.1"`)
+        ├── log.md                # OKF change history (newest-first, ISO dates)
+        ├── templates/            # per-type concept skeletons
+        │   └── {{type}}.md
+        ├── references/           # optional: cited source copies
+        └── {{concept}}.md        # concepts (require `type:` frontmatter)
 ```
 
 ### Memory
@@ -48,7 +50,7 @@ The four memory layers and how information flows between them (mirrors human mem
 |---|---|---|---|
 | 1 — Principles | `memory/core.md` | Purpose, vision, principles (the *why*) | — |
 | 2 — Operational | `memory/procedural.md` + `skills/` | Workflows, conventions, schema (the *what/how*) | — |
-| 3 — State | `memory/state.md` | Cross-session short-term state | → Layer 2 / 1 / wiki |
+| 3 — State | `memory/state.md` | Cross-session short-term state | → Layer 2 / 1 / bundle |
 | 4 — Journal | `memory/journal.md` | Append-only activity stream | → Layer 3 / 2 |
 
 
@@ -62,7 +64,7 @@ Layer 2 → Layer 3 → Layer 4 is the retrieval path at the start of every requ
 
 **Before any work**, read this file, plus:
 - `memory/state.md` — entire file.
-- `assistants/index.md` — the roster of your direct children and their domains (empty if you have none).
+- `bundles/index.md` — the catalog of your knowledge bundles and their domains (empty if you have none).
 - `memory/journal.md` — the 5 most recent entries only (the log grows without bound; never read the whole file):
 
   `grep "^- \[" memory/journal.md | tail -10`
@@ -75,9 +77,10 @@ tail -n +<line> memory/journal.md              # emit from that line onward
 
 ### Routing
 
-**Delegation & self-handling.** By default, **handle a request yourself**. Delegate (via
-`skills/core/delegate`) only when a child in `assistants/index.md` owns the request's domain — you
-know your children from bootstrap. With no children, or none fitting, handle it yourself. Creating a child assistant is a **human-initiated** action — never create one to satisfy a request.
+**Bundle selection.** Knowledge lives in one or more OKF bundles under `bundles/` — you know them
+from `bundles/index.md` at bootstrap. When a request touches durable knowledge, pick the bundle whose
+domain owns it; if none fits, create one first (via `skills/bundles/create`). Creating a bundle is a
+**human-initiated** action — confirm before adding one.
 
 **Skill routing.** This is how the assistant decides what to do. The skills themselves live in `skills/`; this layer only routes to the appropriate self-contained operational workflows. Load the one whose trigger matches the task; each skill is a folder holding a `SKILL.md` (Agent Skills format).
 
@@ -86,13 +89,13 @@ know your children from bootstrap. With no children, or none fitting, handle it 
 | -------------------------------- | ------------------------------------ |
 | Personalize a fresh assistant    | `skills/core/init/SKILL.md`          |
 | Remember / note a fact for later | `skills/core/remember/SKILL.md`      |
-| Hand a task to a child assistant | `skills/core/delegate/SKILL.md`      |
 | Consolidate / self-improve       | `skills/core/reflect/SKILL.md`       |
-| Absorb a new raw source          | `skills/wiki/ingest/SKILL.md`        |
-| Answer from existing knowledge   | `skills/wiki/query/SKILL.md`         |
-| Audit the wiki's health          | `skills/wiki/lint/SKILL.md`          |
-| Add a child assistant            | `skills/assistants/create/SKILL.md`  |
-| Remove a child assistant         | `skills/assistants/remove/SKILL.md`  |
+| Create a new knowledge bundle    | `skills/bundles/create/SKILL.md`     |
+| Add an existing OKF bundle       | `skills/bundles/import/SKILL.md`      |
+| Retire a knowledge bundle        | `skills/bundles/remove/SKILL.md`     |
+| Absorb a new raw source          | `skills/bundles/ingest/SKILL.md`     |
+| Answer from existing knowledge   | `skills/bundles/query/SKILL.md`      |
+| Audit a bundle's health          | `skills/bundles/lint/SKILL.md`       |
 
 
 ### Logging
@@ -114,11 +117,11 @@ Route what you learn to its home (this operationalizes the *One fact, one home* 
 |---|---|
 | Any action, query, error, or event | `memory/journal.md` — always |
 | Transient state with a shelf life (active tasks, deadlines, current context) | `memory/state.md` — date-anchored → *Upcoming Deadlines*, open-ended → *Entries* |
-| Durable knowledge for the human | `wiki/` — via `skills/wiki/ingest` or `query` |
+| Durable knowledge for the human | a bundle — via `skills/bundles/ingest` or `query` |
 | A new repeatable workflow + its trigger | a skill under `skills/` + a route in **Skill Routes** |
 | A lasting principle (rare) | `memory/core.md` |
 
-`skills/wiki/ingest` also mirrors a source's time-sensitive facts into `memory/state.md` (by the date rule above) while filing the durable knowledge to the `wiki/`.
+`skills/bundles/ingest` also mirrors a source's time-sensitive facts into `memory/state.md` (by the date rule above) while filing the durable knowledge to a bundle.
 
 ### Conventions
 
@@ -127,7 +130,18 @@ Global operating conventions for the assistant:
 - **Dates & timestamps:** Use today's actual date (check via shell if unsure) for `created`/`updated` fields and log entries. Convert relative dates ("last week", "in 3 days") to absolute `YYYY-MM-DD`.
 - **Secrets:** Record only *where* a secret lives (e.g. "1Password vault HomeLab", "in the `.env` on the host"), never the secret value itself.
 - **Changes:** Make small, frequent, well-described edits. It's a git repo of markdown — favour many focused commits over sweeping rewrites, and keep history clean.
-- **Cross-linking:** Use `[[wikilinks]]` liberally between related pages; a link to a not-yet-created page is a useful marker of work to do.
-- **Filenames:** kebab-case (`page-name.md`, `other-page.md`).
-- **Sources are immutable:** read and relocate between `sources/inbox → library/archive`; never edit a source's content.
+- **OKF concepts:** Every non-reserved `.md` in a bundle is a concept and MUST carry a `type:` in its
+  YAML frontmatter (recommended too: `title`, `description`, `resource`, `tags`, `timestamp`). Use the
+  conventional `# Schema`, `# Examples`, `# Citations` sections where they apply. Reserved names
+  `index.md` and `log.md` are exempt.
+- **Cross-linking:** Link related concepts with the OKF absolute bundle-relative form
+  `[title](/path/to/concept.md)`; a link to a not-yet-created concept is a useful marker of work to
+  do (broken links are tolerated).
+- **Filenames:** kebab-case (`concept-name.md`, `other-concept.md`).
+- **Source citations:** when a concept draws on a global source, cite it under `# Citations` by its
+  `sources/library/<file>` path — a stable, greppable key — so the claim is traceable and so
+  `skills/bundles/remove` can find a bundle's backing sources.
+- **Sources are immutable:** read and relocate, never edit a source's content. `sources/inbox/` is the
+  drop zone awaiting ingestion; `sources/library/` holds sources that actively back a bundle;
+  `sources/archive/` holds sources retired when their last citing bundle was removed.
 - **Reflect regularly:** run `skills/core/reflect` at session end, and/or once a batch of entries has accrued since the last `reflect:` watermark — sooner if a clear pattern emerged or `state` is about to expire; not after every action. Frequency matters: too often churns the slow-changing layers, too rarely stalls learning.

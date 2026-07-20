@@ -4,46 +4,48 @@ A flexible implementation of an everyday, AI-powered personal assistant. It targ
 
 It is the synthesis of two ideas (see [docs/concepts.md](docs/concepts.md)):
 
-- **The LLM Wiki** — knowledge that compounds: the assistant curates a persistent, interlinked wiki instead of re-deriving answers each time.
+- **The LLM Wiki** — knowledge that compounds: the assistant curates persistent, interlinked knowledge instead of re-deriving answers each time. Here that knowledge lives in one or more [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) (OKF) bundles.
 - **The Continual Harness** — capability that compounds: the assistant adapts its own memory and skills from its activity history.
 
 ## How it works
 
 The framework **source** lives in `src/` (version-controlled): `AGENTS.md`, the blank `memory/`
-contracts, and `skills/`. You **build** a working assistant from it into `assistant/` (gitignored) —
-the built instance is what the harness boots from, and it evolves freely at runtime without touching
-the tracked source. A built assistant is a self-contained directory:
+contracts, and `skills/`. You **install** a working assistant from it into a target directory of your
+choice — inside the repo (e.g. `assistant/`, which is gitignored) or anywhere on disk. The installed
+instance is what the harness boots from, and it evolves freely at runtime without touching the tracked
+source. An installed assistant is a self-contained directory:
 
 ```
-assistant/   (built from src/, gitignored)
+assistant/   (installed from src/)
 ├── AGENTS.md      # entrypoint: bootstrap, then act
 ├── memory/        # 4-layer memory — core · procedural · state · journal
-├── skills/        # SKILL.md playbooks — core/ · wiki/ · assistants/
+├── skills/        # SKILL.md playbooks — core/ · bundles/
 ├── sources/       # raw source pipeline — inbox → library/archive
-├── templates/     # wiki page skeletons
-├── wiki/          # the curated knowledge base
-└── assistants/    # child assistants, each an identical assistant
+└── bundles/       # OKF knowledge bundles (index.md catalogs them)
 ```
 
 - **Memory** is layered like human memory; the `reflect` skill consolidates activity upward into
   durable learnings. See [docs/memory.md](docs/memory.md).
-- **Skills** are the operating procedures: `core/` (init, delegate, reflect, remember), `wiki/` (ingest,
-  query, lint), `assistants/` (create, remove). `memory/procedural.md` routes intent → skill.
-- **Recursion** is structural: an assistant holds child assistants of the same shape, so an orchestrator can
-  coordinate domain assistants to any depth. See [docs/recursion.md](docs/recursion.md).
+- **Skills** are the operating procedures: `core/` (init, reflect, remember), `bundles/` (create,
+  import, remove, ingest, query, lint). `memory/procedural.md` routes intent → skill.
+- **Bundles** hold the knowledge: each is an OKF-compliant markdown tree for one domain, and the
+  assistant manages as many as it needs. See [docs/bundles.md](docs/bundles.md).
 
 ## Quick Start
 
 1. Clone this repo.
-2. **Build** the working assistant from the source: `sh ./scaffold.sh assistant`
-3. Point your harness to the `assistant/` directory and run the `init` skill to set its identity,
-   domain, and purpose.
-4. Drop material into `sources/inbox/` and run `ingest`; ask questions with `query`.
-5. Add specialized child assistants with the `create` skill when one domain isn't enough.
+2. **Install** the working assistant from the source: `sh ./install.sh assistant` (or any path,
+   relative or absolute — e.g. `sh ./install.sh ~/my-brain`).
+3. Point your harness to the installed directory and run the `init` skill to set its identity,
+   domain, and purpose — and optionally stand up its first bundle.
+4. Create a knowledge bundle with `create` (if `init` didn't), drop material into `sources/inbox/`
+   and run `ingest`; ask questions with `query`.
+5. Add more bundles with `create` when the assistant needs to cover another domain.
 
-> `src/` is the only version-controlled part; `assistant/` is a build artifact that evolves as you
-> use it (the build adds a root instance to `.gitignore` automatically, and refuses to build outside
-> the project). Rebuild or reset it any time from `src/`.
+> `src/` is the only version-controlled part; an installed instance is a runtime artifact that evolves
+> as you use it. The repo already gitignores `assistant/`, so the common in-repo install stays
+> untracked; install elsewhere to keep it outside the repo entirely. Reinstall or reset any time from
+> `src/`.
 
 ## Using with Claude Co-Work
 
@@ -51,8 +53,8 @@ To use this assistant with Claude Co-Work, first set up your Claude Co-Work envi
 
 ### Initializing the Assistant
 
-If `assistant/` doesn't exist yet (a fresh clone only has `src/`), build it first:
-`sh ./scaffold.sh assistant`.
+If `assistant/` doesn't exist yet (a fresh clone only has `src/`), install it first:
+`sh ./install.sh assistant`.
 
 Start a new task in Claude Co-Work and ensure your working directory is the `assistant/` directory.
 
@@ -63,23 +65,21 @@ In the task chat, type `run init` to initialize the assistant.
 #### Add Sources
 
 Add sources to the `sources/inbox/` directory to provide context for the assistant.
-Type `run ingest` to process the inbox and add sources to the wiki. Ingested sources are permanently stored in the `sources/library/` directory.
+Type `run ingest` to process the inbox and file sources into the right bundle. Ingested sources are permanently stored in the `sources/library/` directory.
 
 #### Query & Search
 
-Type your query `<query text>` or `run query <query_text>` to search the wiki for relevant sources.
+Type your query `<query text>` or `run query <query_text>` to search the bundles for relevant knowledge.
 
 #### Ask the Assistant
 
-Type your query `<query text>` to ask the assistant a question. The assistant will respond with a relevant answer based on its memory and the sources in the wiki.
+Type your query `<query text>` to ask the assistant a question. The assistant will respond with a relevant answer based on its memory and the concepts in its bundles.
 
 #### Take Notes
 
-Type `remember <fact>` (or `run remember <fact>`). The `remember` skill files it to the right memory layer for you — a short-lived note in `state` by default, durable knowledge into the wiki, or a lasting preference into `core`.
+Type `remember <fact>` (or `run remember <fact>`). The `remember` skill files it to the right memory layer for you — a short-lived note in `state` by default, durable knowledge into a bundle, or a lasting preference into `core`.
 
 ### Running Skills
-
-The assistant uses a recursive loop to process requests and execute skills.
 
 To run a skill, use the `run` command followed by the skill name and any required arguments. For example:
 
@@ -91,15 +91,15 @@ Available skills:
 
 | Skill | Run | What it does |
 |---|---|---|
-| `init` | `run init` | One-time setup — set the assistant's identity, domain, and purpose, and build its wiki schema and page templates. |
-| `remember` | `run remember <fact>` | Save a fact to the right memory layer — a short-lived note by default, durable knowledge to the wiki, or a lasting preference to core. |
-| `ingest` | `run ingest` | Pull new material from `sources/inbox/` into the wiki, then file the source into `sources/library/`. |
-| `query` | `run query <text>` | Answer a question from the wiki and save useful new findings back as pages. |
-| `lint` | `run lint` | Audit the wiki for contradictions, stale claims, orphans, and broken links. |
+| `init` | `run init` | One-time setup — set the assistant's identity, domain, and purpose, and optionally stand up its first bundle. |
+| `remember` | `run remember <fact>` | Save a fact to the right memory layer — a short-lived note by default, durable knowledge to a bundle, or a lasting preference to core. |
+| `create` | `run create <name>` | Create a new OKF knowledge bundle for a domain. |
+| `import` | `run import <path>` | Adopt an existing OKF bundle authored elsewhere — verify it and register it. |
+| `remove` | `run remove <name>` | Retire a bundle — confirms first, offers to preserve a copy, then deletes and deregisters it. |
+| `ingest` | `run ingest` | Pull new material from `sources/inbox/` into the right bundle, then file the source into `sources/library/`. |
+| `query` | `run query <text>` | Answer a question from the bundles and save useful new findings back as concepts. |
+| `lint` | `run lint` | Audit a bundle for OKF conformance, contradictions, stale claims, orphans, and broken links. |
 | `reflect` | `run reflect` | Consolidate recent activity into durable memory and prune stale state (self-improvement). |
-| `create` | `run create <name>` | Create a new specialized child assistant under `assistants/`. |
-| `delegate` | `run delegate <task>` | Hand a task to the child assistant whose domain fits. |
-| `remove` | `run remove <name>` | Retire a child assistant (confirms first). |
 
 ## Customizing Your Assistant
 
@@ -107,30 +107,31 @@ Everything the assistant is and does lives in editable markdown under `assistant
 
 - **Identity & principles** — edit `memory/core.md` (or re-run `init`) to change the assistant's name, domain, purpose, and core principles.
 - **Routing & conventions** — edit `memory/procedural.md` to add skill routes, operating rules, or conventions.
-- **Knowledge structure** — edit `wiki/schema.md` and the page templates in `templates/` to match your domain (these are created for you by `init`).
+- **Knowledge structure** — a bundle's concept types live in its `templates/` (created for you by `create`); edit them to match the domain.
 - **Add a skill** — create `skills/<group>/<name>/SKILL.md` (Agent Skills format), with `scripts/` or `assets/` if it needs them, then add a route for it in `memory/procedural.md`.
 
 The assistant also customizes itself over time: `reflect` promotes durable learnings from its activity log into its memory and skills.
 
-## Creating Sub-Assistants
+## Managing Bundles
 
-When one domain isn't enough, give the assistant specialized children. Each sub-assistant is a complete, self-contained assistant that owns one domain; the parent coordinates by delegating to it, and sub-assistants can nest to any depth.
+Knowledge lives in one or more OKF bundles under `bundles/` — one per domain. The assistant manages as many as it needs; the `bundles/index.md` catalog lists them all.
 
-1. `run create <name>` — scaffolds `assistants/<name>/` (see `skills/assistants/create`).
-2. `run init` in the new sub-assistant — personalize its identity, domain, and wiki.
-3. From the parent, `run delegate <task>` routes domain work to the child.
+1. `run create <name>` — stands up a new `bundles/<name>/` with its `index.md`, `log.md`, and per-type `templates/` (see `skills/bundles/create`). Or `run import <path>` to adopt an existing OKF bundle authored elsewhere (see `skills/bundles/import`).
+2. Drop material into `sources/inbox/` and `run ingest` — it files concepts into the right bundle.
+3. `run query <text>` answers from the bundles; `run lint` keeps a bundle OKF-conformant and healthy.
+4. `run remove <name>` retires a bundle you no longer need (destructive — confirms first).
 
-See [docs/recursion.md](docs/recursion.md) for the full model.
+See [docs/bundles.md](docs/bundles.md) for the full model.
 
 ## Architecture
 
-The framework is markdown conventions only (the lone exception is `create`'s optional scaffolding script), so there is no build step or runtime.
+The framework is markdown conventions only, so there is no build step or runtime.
 
-- **Recursive assistants.** Every assistant — root or child — is the same directory shape (see *How it works*). Orchestrator vs. domain assistant is a role, not a structure: an orchestrator simply has a populated `assistants/`. See [docs/recursion.md](docs/recursion.md).
+- **Multiple bundles.** The assistant covers several domains by managing multiple OKF knowledge bundles under `bundles/` — one per domain — rather than a single wiki. See [docs/bundles.md](docs/bundles.md).
 - **Four-layer memory.** `core` (identity & principles) · `procedural` (layout, routes, conventions) · `state` (short-lived state) · `journal` (append-only activity log). `reflect` consolidates upward and is the self-improvement loop. See [docs/memory.md](docs/memory.md).
-- **Skills** are self-contained `SKILL.md` procedures under `skills/{core,wiki,assistants}/`, routed from `memory/procedural.md`. They follow the [Agent Skills spec](https://agentskills.io/specification).
-- **Knowledge vs. memory.** `wiki/` is durable, user-facing knowledge curated from `sources/`; `memory/` is the assistant's own operating state. The two are kept separate.
-- **Source vs. instance (dev/build split).** `src/` is the only version-controlled tree — `AGENTS.md`, the blank `memory/` contracts, and `skills/`. A working `assistant/` is built from it by the root `scaffold.sh` and is gitignored; it evolves its own memory and skills at runtime without touching `src/`. New children are built the same way — **pristine from `src/`** — so there is a single source of truth and no template to keep in sync.
+- **Skills** are self-contained `SKILL.md` procedures under `skills/{core,bundles}/`, routed from `memory/procedural.md`. They follow the [Agent Skills spec](https://agentskills.io/specification).
+- **Knowledge vs. memory.** `bundles/` hold durable, user-facing knowledge (OKF concepts) curated from `sources/`; `memory/` is the assistant's own operating state. The two are kept separate.
+- **Source vs. instance (dev/install split).** `src/` is the only version-controlled tree — `AGENTS.md`, the blank `memory/` contracts, and `skills/`. A working instance is installed from it by `install.sh` into any target path (the repo gitignores `assistant/` for the common in-repo case); it evolves its own memory, skills, and bundles at runtime without touching `src/`.
 
 See also [docs/concepts.md](docs/concepts.md) for the two foundational ideas, and `CLAUDE.md` for guidance on working on the framework itself.
 

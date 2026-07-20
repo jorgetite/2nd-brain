@@ -8,14 +8,18 @@ how they combine here.
 Source: Karpathy, *LLM Wiki* — https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
 
 Rather than re-retrieving and re-synthesizing knowledge on every query (classic RAG), the assistant
-**incrementally builds and maintains a persistent, LLM-authored wiki** of markdown that compounds
-over time. Knowledge is integrated once and updated as new sources arrive.
+**incrementally builds and maintains persistent, LLM-authored markdown** that compounds over time.
+Knowledge is integrated once and updated as new sources arrive. Here that knowledge lives in one or
+more [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
+(OKF) **bundles** — portable, tool-free directory trees of markdown concepts.
 
 - **Raw sources** — immutable inputs (`sources/`: inbox → library/archive).
-- **The wiki** — curated, interlinked markdown pages (`wiki/`).
-- **The schema** — how this wiki is organized (`wiki/schema.md`).
+- **The bundles** — curated, interlinked OKF concepts (`bundles/<name>/`), each with its own
+  `index.md` listing and `log.md` history.
+- **The schema** — OKF's free-string concept `type` plus each bundle's own `templates/`.
 
-Three operations form the lifecycle, one skill each: **ingest**, **query**, **lint**.
+Three operations form the lifecycle, one skill each: **ingest**, **query**, **lint**. The assistant
+manages several bundles — one per domain — instead of a single wiki. See [bundles](bundles.md).
 
 ## 2. The Continual Harness — capability that compounds
 
@@ -29,8 +33,8 @@ driven by the journal activity stream.
 
 ## How they combine
 
-The wiki is **what the assistant knows**; the skills and memory are **how it acts**. Both are living
-artifacts the assistant maintains. When extending the framework, ask which half a change belongs to:
-knowledge (wiki: ingest / query / lint) or capability (memory + skills: reflect).
+The bundles are **what the assistant knows**; the skills and memory are **how it acts**. Both are
+living artifacts the assistant maintains. When extending the framework, ask which half a change
+belongs to: knowledge (bundles: ingest / query / lint) or capability (memory + skills: reflect).
 
-See also: [memory model](memory.md), [recursion](recursion.md).
+See also: [memory model](memory.md), [bundles](bundles.md).
