@@ -65,8 +65,10 @@ Creating a bundle is **human-initiated** — confirm the domain with the human b
      {{[1] [Source](path) — filled at ingest}}
      ```
 4. **Register the bundle.** Add a row to `bundles/index.md` so `query` and `ingest` can find it:
-   `* [<name>](<name>/) - <one-line domain description>`. Remove the `_(no bundles yet)_` placeholder
-   if present.
+   `* [<name>](<name>/) - <description>`. Make the description convey the bundle's **scope** — the
+   kinds of thing it covers (its concept types / key topics) — not just a bare label, so a query can
+   tell from the catalog alone whether this bundle is relevant. Remove the `_(no bundles yet)_`
+   placeholder if present.
 5. **Log it.** Append an entry to `memory/journal.md`.
 
 ## Done when

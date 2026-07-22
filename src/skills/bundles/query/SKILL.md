@@ -10,13 +10,19 @@ being lost in chat.
 
 ## Steps
 
-1. **Locate.** Read `bundles/index.md` to pick the relevant bundle(s), then start from each bundle's
-   `index.md` and read the relevant concepts. Follow their `[title](/path/to/concept.md)` links.
-2. **Synthesize** an answer grounded only in what the concepts (and their cited sources) support. If
-   the bundles can't answer, say so plainly — *Truth over invention* — and note the gap.
+1. **Locate.** Scan the **whole** `bundles/index.md` catalog and open **every** bundle whose domain
+   could plausibly bear on the question — don't stop at the first match; a question may span several
+   bundles. Enter each at its `index.md`, follow into any subdirectory `index.md` as needed, and read
+   the relevant concepts via their `[title](/path/to/concept.md)` links (the leading `/` is
+   bundle-root-relative).
+2. **Synthesize** an answer grounded only in what the concepts (and their cited sources) support. When
+   the answer draws on more than one bundle, **attribute** each fact to the bundle/concept it came
+   from. If the bundles can't answer, say so plainly — *Truth over invention* — and note the gap.
 3. **File valuable results back.** If the synthesis is durable and not already captured, record it as
-   a new concept (with a `type:`) or fold it into an existing one in the right bundle. Update that
-   bundle's `index.md` and `log.md`, and cross-link.
+   a new concept (with a `type:`) or fold it into an existing one. A cross-cutting synthesis goes into
+   the **single most-relevant bundle**; if it belongs to no single bundle, leave it in the reply
+   rather than forcing it somewhere (*One fact, one home*). Update that bundle's `index.md` and
+   `log.md`, and cross-link.
 4. **Surface gaps.** If answering revealed missing knowledge, suggest an `ingest` (or capture the gap
    as a link to a not-yet-created concept).
 5. **Log it.** Append an entry to `memory/journal.md`.

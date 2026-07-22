@@ -28,7 +28,7 @@ Three core operations define the lifecycle:
 - **Query** — search relevant concepts, synthesize an answer, and **file valuable results back into a bundle** rather than losing them in chat history.
 - **Lint** — periodically audit for OKF conformance, contradictions, stale claims, orphaned concepts, and broken links.
 
-Within each bundle, navigation relies on two reserved files: `index.md` (a progressive-disclosure listing) and `log.md` (chronological, newest-first change history). A `bundles/index.md` catalog lists the bundles themselves. The key insight: the expensive part of a knowledge base is the *bookkeeping*, so that work is delegated to the LLM.
+Within each bundle, navigation relies on two reserved files: `index.md` (a progressive-disclosure listing) and `log.md` (chronological, newest-first change history). OKF allows an `index.md` at any directory level, so a large bundle nests subdirectory indexes to stay progressively disclosed. A `bundles/index.md` catalog lists the bundles themselves. The key insight: the expensive part of a knowledge base is the *bookkeeping*, so that work is delegated to the LLM.
 
 > Note: this project's own agent memory (under the harness's memory directory) follows the same spirit — one fact per file, an index that points at them, links between related facts. The user-facing bundles and the agent's operational memory are distinct stores; keep them separate.
 
@@ -36,7 +36,7 @@ Within each bundle, navigation relies on two reserved files: `index.md` (a progr
 
 Source: https://arxiv.org/abs/2605.09998 (*Continual Harness: Online Adaptation for Self-Improving Foundation Agents*)
 
-A **reset-free, self-improving harness** wraps the foundation model with tools, memory, and planning. The agent **adapts online within a single run** — no episode resets — continuously refining its own **prompts, sub-agents, skills, and memory** using historical trajectory data. Execution and strategy-refinement alternate, with long-context memory used to spot improvement opportunities. The result: strong performance starting from a minimal interface with no curated domain knowledge.
+A **reset-free, self-improving harness** wraps the foundation model with tools, memory, and planning. The agent **adapts online within a single run** — no episode resets — continuously refining its own **prompts, skills, and memory** using historical trajectory data. Execution and strategy-refinement alternate, with long-context memory used to spot improvement opportunities. The result: strong performance starting from a minimal interface with no curated domain knowledge.
 
 ### How they combine here
 
@@ -48,7 +48,7 @@ The LLM Wiki is the **knowledge that compounds**; the Continual Harness is the *
 
 - A single assistant owns its knowledge as **one or more OKF bundles** under `bundles/`, one per domain. The `bundles/index.md` catalog lists them and is loaded at bootstrap.
 - Each bundle is a self-contained OKF markdown tree — its own `index.md`, `log.md`, per-type `templates/`, and `type`-tagged concept files — so it stays portable and can be shared or moved independently.
-- Adding a bundle is human-initiated: `skills/bundles/create` generates a new empty bundle, or `skills/bundles/import` adopts an existing OKF bundle authored elsewhere; `skills/bundles/remove` retires one (destructive, confirms first). `ingest`/`query`/`lint` operate on the appropriate bundle chosen from the catalog.
+- Adding a bundle is human-initiated: `skills/bundles/create` generates a new empty bundle, or `skills/bundles/import` adopts an existing OKF bundle authored elsewhere; `skills/bundles/remove` retires one (destructive, confirms first — archiving the bundle's unshared backing sources to `sources/archive/`). `ingest`/`query`/`lint` operate on the appropriate bundle chosen from the catalog.
 
 ### Project Structure
 

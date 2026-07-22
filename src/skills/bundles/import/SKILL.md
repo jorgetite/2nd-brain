@@ -22,8 +22,10 @@ treated here as immutable.
    don't silently rewrite a bundle you didn't author; fixing is the human's call or a follow-up
    `lint`. Only a passing bundle proceeds.
 4. **Register** the bundle — add a row to `bundles/index.md`, drawing the description from the
-   bundle's own `index.md`: `* [<name>](<name>/) - <one-line domain description>`. Remove the
-   `_(no bundles yet)_` placeholder if present.
+   bundle's own `index.md`: `* [<name>](<name>/) - <description>`. Make the description convey the
+   bundle's **scope** (its concept types / key topics), not just a bare label, so a query can tell from
+   the catalog alone whether this bundle is relevant. Remove the `_(no bundles yet)_` placeholder if
+   present.
 5. **Log it.** Append an entry to `memory/journal.md` naming the bundle and where it came from. Leave
    the bundle's own `log.md` untouched — it is the bundle's authored history, not the assistant's.
 

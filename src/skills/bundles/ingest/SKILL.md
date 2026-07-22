@@ -25,7 +25,10 @@ existing concepts rather than appending duplicates.
      `[title](/path/to/concept.md)`. Trace every claim to the source under a `# Citations` section,
      citing it by its `sources/library/<file>` path (its permanent home after step 8) — a stable,
      greppable key that lets `skills/bundles/remove` find this bundle's backing sources later.
-5. **Update the bundle `index.md`** — add/adjust the list entry for each created or renamed concept.
+5. **Update the `index.md`** — add/adjust the list entry for each created or renamed concept. If a
+   concept lives in a subdirectory, update that subdirectory's own `index.md` (create it if the
+   subdirectory is new) and make sure the parent `index.md` links to the subdirectory — so large
+   bundles stay progressively disclosed.
 6. **Append to the bundle `log.md`** — a `* **Creation**`/`* **Update**` bullet under a
    `## YYYY-MM-DD` heading (newest first) naming what changed.
 7. **Surface time-sensitive facts.** If the source carries anything with a shelf life — deadlines,

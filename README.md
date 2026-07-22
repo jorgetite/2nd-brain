@@ -95,7 +95,7 @@ Available skills:
 | `remember` | `run remember <fact>` | Save a fact to the right memory layer — a short-lived note by default, durable knowledge to a bundle, or a lasting preference to core. |
 | `create` | `run create <name>` | Create a new OKF knowledge bundle for a domain. |
 | `import` | `run import <path>` | Adopt an existing OKF bundle authored elsewhere — verify it and register it. |
-| `remove` | `run remove <name>` | Retire a bundle — confirms first, offers to preserve a copy, then deletes and deregisters it. |
+| `remove` | `run remove <name>` | Retire a bundle — confirms first, offers to preserve a copy, then deletes and deregisters it, archiving its unshared backing sources to `sources/archive/`. |
 | `ingest` | `run ingest` | Pull new material from `sources/inbox/` into the right bundle, then file the source into `sources/library/`. |
 | `query` | `run query <text>` | Answer a question from the bundles and save useful new findings back as concepts. |
 | `lint` | `run lint` | Audit a bundle for OKF conformance, contradictions, stale claims, orphans, and broken links. |
@@ -119,7 +119,7 @@ Knowledge lives in one or more OKF bundles under `bundles/` — one per domain. 
 1. `run create <name>` — stands up a new `bundles/<name>/` with its `index.md`, `log.md`, and per-type `templates/` (see `skills/bundles/create`). Or `run import <path>` to adopt an existing OKF bundle authored elsewhere (see `skills/bundles/import`).
 2. Drop material into `sources/inbox/` and `run ingest` — it files concepts into the right bundle.
 3. `run query <text>` answers from the bundles; `run lint` keeps a bundle OKF-conformant and healthy.
-4. `run remove <name>` retires a bundle you no longer need (destructive — confirms first).
+4. `run remove <name>` retires a bundle you no longer need (destructive — confirms first; archives its unshared backing sources to `sources/archive/`).
 
 See [docs/bundles.md](docs/bundles.md) for the full model.
 

@@ -25,9 +25,14 @@ bundles/
   frontmatter. Recommended fields: `title`, `description`, `resource`, `tags`, `timestamp` (ISO
   8601). Conventional body sections: `# Schema`, `# Examples`, `# Citations`.
 - **Reserved files.** Only `index.md` (a markdown-list listing for progressive disclosure) and
-  `log.md` (a newest-first change history under `## YYYY-MM-DD` headings) have defined meaning.
-- **Links.** Relate concepts with the absolute bundle-relative form `[title](/path/to/concept.md)`.
-  Broken links are tolerated — a link to a not-yet-written concept is a useful work marker.
+  `log.md` (a newest-first change history under `## YYYY-MM-DD` headings) have defined meaning. OKF
+  allows an `index.md` at **any directory level**, so a large bundle can group concepts into
+  subdirectories — each with its own `index.md`, linked from its parent — to stay progressively
+  disclosed.
+- **Links.** Relate concepts with the absolute bundle-relative form `[title](/path/to/concept.md)` —
+  the leading `/` is relative to the **bundle root**. Links stay within a bundle (bundles are
+  self-contained); connect across bundles via the `bundles/index.md` catalog, not links. Broken links
+  are tolerated — a link to a not-yet-written concept is a useful work marker.
 - **Conformance is minimal.** A bundle is conformant if every concept has parseable frontmatter with
   a non-empty `type`. Unknown fields and broken links must be tolerated, never rejected.
 

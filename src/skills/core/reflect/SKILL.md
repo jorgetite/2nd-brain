@@ -65,4 +65,6 @@ to expire. Do not run after every action.
 ## Cautions
 
 - Promote only what is genuinely durable; churn in `core.md` and `procedural.md` is a smell.
-- Self-edits stay within this assistant. Never touch a sibling's or parent's memory or skills.
+- Self-edits stay within this assistant — change only its own `memory/` and `skills/`.
+- After editing `core.md` or `procedural.md`, reload them — your in-context copy is now stale (see the
+  force-reload rule in `memory/procedural.md` Bootstrapping).

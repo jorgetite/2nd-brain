@@ -39,7 +39,10 @@ assistant/
         ├── templates/            # per-type concept skeletons
         │   └── {{type}}.md
         ├── references/           # optional: cited source copies
-        └── {{concept}}.md        # concepts (require `type:` frontmatter)
+        ├── {{concept}}.md        # concepts (require `type:` frontmatter)
+        └── {{subdir}}/           # optional: group concepts; carries its own index.md
+            ├── index.md              # OKF listing for this subtree
+            └── {{concept}}.md
 ```
 
 ### Memory
@@ -60,16 +63,29 @@ The four memory layers and how information flows between them (mirrors human mem
 
 ### Bootstrapping
 
-Layer 2 → Layer 3 → Layer 4 is the retrieval path at the start of every request.
+The retrieval path is Layer 2 → Layer 3 → Layer 4 plus the `bundles/index.md` catalog. The reads are
+independent — issue them in **one parallel batch**, not one at a time.
 
-**Before any work**, read this file, plus:
-- `memory/state.md` — entire file.
-- `bundles/index.md` — the catalog of your knowledge bundles and their domains (empty if you have none).
-- `memory/journal.md` — the 5 most recent entries only (the log grows without bound; never read the whole file):
+**Cold vs. warm.** Bootstrap cost is paid per request, so re-read only what can have changed:
 
-  `grep "^- \[" memory/journal.md | tail -10`
+- **Cold start** — a fresh session, or the context was reset, so L1/L2 aren't in memory yet. Read
+  everything: `memory/core.md`, `memory/procedural.md` (this file), `memory/state.md`,
+  `bundles/index.md`, and the journal tail.
+- **Warm** — L1/L2 are already loaded this session. Skip re-reading `core.md` and `procedural.md`;
+  refresh only the volatile reads:
+  - `memory/state.md` — entire file.
+  - `bundles/index.md` — the catalog of your knowledge bundles and their domains.
+  - `memory/journal.md` — the 10 most recent entries only (never read the whole file):
+    `grep "^- \[" memory/journal.md | tail -10`.
+- **Force a full reload** of `core.md` and/or `procedural.md` whenever they change during a session
+  (after `init`, a `reflect` that promoted to L1/L2, or a manual edit) — your in-context copy is stale
+  until you re-read the changed file.
 
-To read a date range, scan entries cheaply first, then slice from the first one in range:
+**Check initialization** from the `core.md` you already loaded — no separate command needed: if it
+still contains `{{placeholders}}` (name, domain, purpose), the assistant hasn't been personalized —
+route to `skills/core/init` before any other work.
+
+To read a journal date range, scan entries cheaply first, then slice from the first one in range:
 ```bash
 grep -n "^- \[" memory/journal.md | tail -50   # recent entries with line numbers
 tail -n +<line> memory/journal.md              # emit from that line onward
@@ -135,8 +151,11 @@ Global operating conventions for the assistant:
   conventional `# Schema`, `# Examples`, `# Citations` sections where they apply. Reserved names
   `index.md` and `log.md` are exempt.
 - **Cross-linking:** Link related concepts with the OKF absolute bundle-relative form
-  `[title](/path/to/concept.md)`; a link to a not-yet-created concept is a useful marker of work to
-  do (broken links are tolerated).
+  `[title](/path/to/concept.md)` — the leading `/` resolves to the **bundle root**
+  (`bundles/<name>/…`), not the working directory or repo root. A link to a not-yet-created concept is
+  a useful marker of work to do (broken links are tolerated). Links stay **within a bundle**: bundles
+  are self-contained, so connect knowledge across bundles via the `bundles/index.md` catalog and query
+  reasoning, not links.
 - **Filenames:** kebab-case (`concept-name.md`, `other-concept.md`).
 - **Source citations:** when a concept draws on a global source, cite it under `# Citations` by its
   `sources/library/<file>` path — a stable, greppable key — so the claim is traceable and so
@@ -144,4 +163,7 @@ Global operating conventions for the assistant:
 - **Sources are immutable:** read and relocate, never edit a source's content. `sources/inbox/` is the
   drop zone awaiting ingestion; `sources/library/` holds sources that actively back a bundle;
   `sources/archive/` holds sources retired when their last citing bundle was removed.
+- **Keep L1/L2 lean:** `core.md` and `procedural.md` load on every cold start and `procedural.md` is
+  the bulk of that payload. Keep them tight — push detail into skills or bundles rather than growing
+  the hot path, and don't split `procedural.md` (that trades tokens for extra round-trips).
 - **Reflect regularly:** run `skills/core/reflect` at session end, and/or once a batch of entries has accrued since the last `reflect:` watermark — sooner if a clear pattern emerged or `state` is about to expire; not after every action. Frequency matters: too often churns the slow-changing layers, too rarely stalls learning.

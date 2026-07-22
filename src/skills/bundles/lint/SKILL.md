@@ -15,7 +15,8 @@ For each bundle in `bundles/index.md`, scan its concepts, `index.md`, and `log.m
   `type:` (reserved `index.md`/`log.md` are exempt). The bundle-root `index.md` declares
   `okf_version`.
 - **Index drift** — concepts missing from `index.md`, or list entries pointing at moved/deleted
-  concepts.
+  concepts. Check **every directory's** `index.md`, not just the bundle root: each subdirectory should
+  list its own concepts and be linked from its parent index.
 - **Log drift** — `log.md` missing recent changes, or not newest-first with `## YYYY-MM-DD` headings.
 - **Broken links** — `[title](/path/to/concept.md)` links to concepts that don't exist (decide:
   create the concept, or fix the link — broken links are tolerated but worth resolving).
