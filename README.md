@@ -21,13 +21,14 @@ assistant/   (installed from src/)
 ├── memory/        # 4-layer memory — core · procedural · state · journal
 ├── skills/        # SKILL.md playbooks — core/ · bundles/
 ├── sources/       # raw source pipeline — inbox → library/archive
-└── bundles/       # OKF knowledge bundles (index.md catalogs them)
+├── bundles/       # OKF knowledge bundles (index.md catalogs them)
+└── artifacts/     # generated deliverables (exports)
 ```
 
 - **Memory** is layered like human memory; the `reflect` skill consolidates activity upward into
   durable learnings. See [docs/memory.md](docs/memory.md).
 - **Skills** are the operating procedures: `core/` (init, reflect, remember), `bundles/` (create,
-  import, remove, ingest, query, lint). `memory/procedural.md` routes intent → skill.
+  import, remove, ingest, query, lint), `artifacts/` (export). `memory/procedural.md` routes intent → skill.
 - **Bundles** hold the knowledge: each is an OKF-compliant markdown tree for one domain, and the
   assistant manages as many as it needs. See [docs/bundles.md](docs/bundles.md).
 
@@ -100,6 +101,7 @@ Available skills:
 | `query` | `run query <text>` | Answer a question from the bundles and save useful new findings back as concepts. |
 | `lint` | `run lint` | Audit a bundle for OKF conformance, contradictions, stale claims, orphans, and broken links. |
 | `reflect` | `run reflect` | Consolidate recent activity into durable memory and prune stale state (self-improvement). |
+| `export` | `run export <what>` | Produce a deliverable (summary, report, slide outline, copied source) into `artifacts/` — not filed into a bundle. |
 
 ## Customizing Your Assistant
 

@@ -34,7 +34,8 @@ mkdir -p \
   "$target/sources/inbox" \
   "$target/sources/library" \
   "$target/sources/archive" \
-  "$target/bundles"
+  "$target/bundles" \
+  "$target/artifacts"
 
 # pristine source: AGENTS.md, blank memory contracts, and the skills — all from src/
 cp "$SRC/AGENTS.md" "$target/AGENTS.md"

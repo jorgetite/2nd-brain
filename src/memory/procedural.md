@@ -12,9 +12,10 @@ assistant/
 ├── memory/               # the four layers: core.md · procedural.md (this file) · state.md · journal.md
 ├── skills/               # workflow playbooks (Agent SKILL.md spec); enumerated in Skill routing
 ├── sources/              # immutable sources: inbox → library → archive
-└── bundles/              # OKF knowledge bundles
-    ├── index.md              # catalog of bundles (progressive disclosure)
-    └── <bundle>/             # OKF tree: index.md · log.md · templates/<type>.md · references/ · <concept>.md · <subdir>/index.md
+├── bundles/              # OKF knowledge bundles
+│   ├── index.md              # catalog of bundles (progressive disclosure)
+│   └── <bundle>/             # OKF tree: index.md · log.md · templates/<type>.md · references/ · <concept>.md · <subdir>/index.md
+└── artifacts/            # generated deliverables (exports); the human prunes
 ```
 
 ### Memory
@@ -61,6 +62,7 @@ To read a journal date range without loading the whole file: `grep -n "^- \[" me
 | Absorb a new raw source | `skills/bundles/ingest/SKILL.md` |
 | Answer from existing knowledge | `skills/bundles/query/SKILL.md` |
 | Audit a bundle's health | `skills/bundles/lint/SKILL.md` |
+| Produce a deliverable (export a document) | `skills/artifacts/export/SKILL.md` |
 
 ### Logging
 

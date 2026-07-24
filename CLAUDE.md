@@ -59,8 +59,8 @@ The LLM Wiki is the **knowledge that compounds**; the Continual Harness is the *
 │   ├── AGENTS.md         #   entrypoint: bootstrap, then act
 │   ├── memory/           #   blank 4-layer contracts: core, procedural, state, journal
 │   └── skills/           #   SKILL.md playbooks: core/, bundles/
-├── assistant/            # GITIGNORED — a working instance installed from src/. Gains sources/ and
-│                         #   bundles/ at install/runtime, and evolves its own memory & skills.
+├── assistant/            # GITIGNORED — a working instance installed from src/. Gains sources/,
+│                         #   bundles/, and artifacts/ at install/runtime, and evolves memory & skills.
 ├── docs/                 # concepts, memory model, bundles
 ├── README.md
 └── CLAUDE.md
