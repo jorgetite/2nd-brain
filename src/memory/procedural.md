@@ -88,10 +88,11 @@ Route what you learn to its home (the *One fact, one home* principle):
 
 ### Conventions
 
-- **Dates:** use today's actual date (check via shell if unsure) for `created`/`updated` and log entries; convert relative dates to absolute `YYYY-MM-DD`.
+- **Dates:** use today's actual date (check via shell if unsure) for `timestamp` and log entries; convert relative dates to absolute `YYYY-MM-DD`.
 - **Secrets:** record only *where* a secret lives (e.g. a named vault, the host `.env`), never the value.
 - **Changes:** small, focused, well-described edits — it's a git repo of markdown; favour many small commits over sweeping rewrites.
 - **OKF concepts:** every non-reserved `.md` in a bundle MUST carry a `type:` in its YAML frontmatter (recommended too: `title`, `description`, `resource`, `tags`, `timestamp`); use the `# Schema`, `# Examples`, `# Citations` sections where they apply. `index.md`/`log.md` are exempt.
+- **Concept templates:** `templates/<type>.md` is the binding format for its type — a concept keeps the template's frontmatter keys and heading set/order, fills every `{{placeholder}}`, and obeys then deletes the `# Authoring` section. No `{{` or `# Authoring` survives in a concept; no template, no new type.
 - **Cross-linking:** link concepts with the OKF bundle-relative form `[title](/path/to/concept.md)` — the leading `/` is the **bundle root**, not the working dir or repo root. Links stay within a bundle (bundles are self-contained); connect across bundles via the `bundles/index.md` catalog, not links. A link to a not-yet-created concept is a fine work marker (broken links tolerated).
 - **Filenames:** kebab-case.
 - **Source citations:** cite a global source under `# Citations` by its `sources/library/<file>` path — a stable, greppable key so the claim is traceable and `skills/bundles/remove` can find a bundle's backing sources.

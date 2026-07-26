@@ -15,7 +15,9 @@ Creating a bundle is **human-initiated** — confirm the domain with the human b
 
 1. **Name the bundle.** Pick a kebab-case `<name>` and a one-line description of the domain it owns.
 2. **Decide the concept types** this domain needs — the key kinds of thing it will track (e.g. a
-   recipes bundle: `recipe`, `ingredient`; a contacts bundle: `person`, `company`). Ask; do not
+   recipes bundle: `recipe`, `ingredient`; a contacts bundle: `person`, `company`). For each, ask
+   whether it has a required page format or rules (extra sections, a structured record, field
+   conventions) — those become the template's shape and its `# Authoring` section. Ask; do not
    invent — *Truth over invention*.
 3. **Create the bundle directory** `bundles/<name>/` with:
    - **`index.md`** — the OKF listing. Give it frontmatter declaring the format version, then an
@@ -40,8 +42,11 @@ Creating a bundle is **human-initiated** — confirm the domain with the human b
      ## YYYY-MM-DD
      * **Initialization**: Created the bundle.
      ```
-   - **`templates/<type>.md`** — one skeleton per concept type from step 2. Each is an OKF concept
-     shell with `{{placeholders}}` filled per concept at ingest:
+   - **`templates/<type>.md`** — one skeleton per concept type from step 2. A template is the
+     **binding format** for its type: its frontmatter keys and its heading set and order are what a
+     concept of that type looks like, with each `{{placeholder}}` filled at ingest. A trailing
+     `# Authoring` section carries the type's rules — obeyed when filling, then deleted, so it never
+     appears in a concept page.
 
      ```markdown
      ---
@@ -63,7 +68,14 @@ Creating a bundle is **human-initiated** — confirm the domain with the human b
 
      # Citations
      {{[1] [Source](path) — filled at ingest}}
+
+     # Authoring
+     _Rules for filling this template. Not part of a concept page — delete this section when filling._
+     {{per-type rules, or omit the section if the skeleton alone is enough}}
      ```
+
+     Shape each template to its type: add, rename, or drop sections and frontmatter fields to match
+     what step 2 established. The block above is the starting point, not a ceiling.
 4. **Register the bundle.** Add a row to `bundles/index.md` so `query` and `ingest` can find it:
    `* [<name>](<name>/) - <description>`. Make the description convey the bundle's **scope** — the
    kinds of thing it covers (its concept types / key topics) — not just a bare label, so a query can

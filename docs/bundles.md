@@ -14,7 +14,7 @@ bundles/
 └── <name>/                   # one OKF-compliant bundle
     ├── index.md                  # OKF listing; declares okf_version: "0.1"
     ├── log.md                    # change history, newest-first, ISO dates
-    ├── templates/<type>.md       # per-type concept skeletons (tooling, not concepts)
+    ├── templates/<type>.md       # binding per-type page format (tooling, not concepts)
     ├── references/               # optional: cited source copies
     └── <concept>.md              # concepts, organized into subdirectories as needed
 ```
@@ -36,6 +36,24 @@ bundles/
 - **Conformance is minimal.** A bundle is conformant if every concept has parseable frontmatter with
   a non-empty `type`. Unknown fields and broken links must be tolerated, never rejected.
 
+## Templates — the per-type page format
+
+OKF leaves `type` a free string with no schema attached. A bundle pins its own down in
+`templates/<type>.md`, which `create` writes, `ingest` and `query` write concepts from, and `lint`
+audits against. Two rules make it binding:
+
+1. **The structure is the format.** A concept of type `X` carries the frontmatter keys and the heading
+   set and order of `templates/X.md`, with each `{{placeholder}}` filled. Sections are dropped only
+   where the template says they may be. A type with no template gets no new concepts — the assistant
+   asks rather than inventing a format.
+2. **`# Authoring` is stripped.** A trailing `# Authoring` section holds the type's rules — anything
+   the skeleton alone can't express (field conventions, a required structured record, what to do with
+   partial information). The assistant obeys it while filling and deletes it, so it never reaches a
+   concept page. `{{ }}` marks a slot to fill; `# Authoring` states a rule.
+
+This is the customization surface: to change how a type's pages look, edit its template. Templates
+are tooling rather than knowledge, so they're exempt from the concept conformance rule above.
+
 ## The operations
 
 | Skill | Does |
@@ -43,7 +61,7 @@ bundles/
 | `bundles/create` | stand up a new bundle — its `index.md`, `log.md`, and per-type `templates/` — and register it in `bundles/index.md` |
 | `bundles/import` | adopt an existing OKF bundle authored elsewhere — place it under `bundles/`, verify conformance, and register it |
 | `bundles/remove` | retire a bundle — confirm, optionally preserve a copy, delete it, and deregister it (destructive, human-initiated) |
-| `bundles/ingest` | absorb a source from `sources/inbox/` into the right bundle as concepts; update its `index.md` and `log.md`; relocate the source to `library/` |
+| `bundles/ingest` | absorb a source from `sources/inbox/` into the right bundle as concepts written from its `templates/`; update its `index.md` and `log.md`; relocate the source to `library/` |
 | `bundles/query` | answer from the bundles and file valuable syntheses back as concepts |
 | `bundles/lint` | audit a bundle for OKF conformance, index/log drift, broken links, orphans, contradictions, and stale claims |
 

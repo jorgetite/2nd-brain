@@ -13,14 +13,19 @@ existing concepts rather than appending duplicates.
 1. **Take a source** from `sources/inbox/`. Read it; do not edit it (*Sources are immutable*).
 2. **Pick the target bundle.** Read `bundles/index.md` and choose the bundle whose domain owns this
    material. If none fits, create one first with `skills/bundles/create`.
-3. **Decide concept types** from the target bundle's `templates/`. One source may touch several
-   concepts.
+3. **Decide concept types** by listing the target bundle's `templates/`. One source may touch several
+   concepts. If the material needs a type with no `templates/<type>.md`, **stop and ask** the human —
+   add the template (`skills/bundles/create` step 3 has the shape) or use an existing type. Never
+   invent a type or a page format on the fly — *Truth over invention*.
 4. **File the knowledge.** For each affected concept:
-   - New concept → start from the matching `templates/<type>.md` skeleton, fill it (required `type:`;
-     set `timestamp` to today), name the file kebab-case, place it at the bundle root or in the right
-     subdirectory.
+   - New concept → copy `templates/<type>.md` and fill it. The template is **binding**: keep its
+     frontmatter keys and its heading set and order (drop a section only where the template says it
+     may be omitted); replace every `{{placeholder}}`; obey the `# Authoring` rules and then **delete
+     that section**. Set `timestamp` to today. Name the file kebab-case, place it at the bundle root
+     or in the right subdirectory.
    - Existing concept → integrate the new facts in place; reconcile, don't append blindly; bump its
-     `timestamp`.
+     `timestamp`. Bring the page up to its template while you're there if the template has since
+     gained sections or fields it lacks.
    - Cross-link related concepts with the OKF absolute bundle-relative form
      `[title](/path/to/concept.md)`. Trace every claim to the source under a `# Citations` section,
      citing it by its `sources/library/<file>` path (its permanent home after step 8) — a stable,
@@ -43,5 +48,6 @@ existing concepts rather than appending duplicates.
 
 ## Done when
 
-The source's knowledge lives in the bundle as conformant concepts, the bundle `index.md` and `log.md`
-are in sync, any time-sensitive facts are in `state.md`, and the source sits in `library/`.
+The source's knowledge lives in the bundle as conformant concepts — each matching its type's
+template, with no `{{placeholder}}` or `# Authoring` section left behind — the bundle `index.md` and
+`log.md` are in sync, any time-sensitive facts are in `state.md`, and the source sits in `library/`.

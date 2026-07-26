@@ -20,7 +20,7 @@ Instead of re-retrieving and re-synthesizing knowledge on every query (classic R
 
 - **Raw Sources** — immutable input documents (articles, papers, notes, data) under `sources/`.
 - **The Bundles** — LLM-maintained OKF concepts: markdown files under `bundles/<name>/`, each carrying a required `type:` in YAML frontmatter, cross-linked with absolute bundle-relative links.
-- **The Schema** — OKF's free-string concept `type` plus each bundle's own `templates/` skeletons (there is no separate schema file).
+- **The Schema** — OKF's free-string concept `type` plus each bundle's own `templates/` skeletons (there is no separate schema file). A `templates/<type>.md` is **binding**: a concept keeps its frontmatter keys and heading set/order, fills every `{{placeholder}}`, and obeys then deletes its `# Authoring` rules section.
 
 Three core operations define the lifecycle:
 

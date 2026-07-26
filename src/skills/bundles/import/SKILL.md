@@ -8,7 +8,8 @@ description: Add an existing, populated OKF-compliant bundle to this assistant �
 Adopt an existing OKF bundle authored elsewhere. Unlike `skills/bundles/create` (which generates a
 fresh, empty bundle), import brings in **already-populated** content and neither invents nor rewrites
 it — the bundle's concepts, `index.md`, `log.md`, and `templates/` were authored elsewhere and are
-treated here as immutable.
+treated here as immutable. The one thing import may *add*, with the human's consent, is a missing
+template (step 4) — without one, the bundle can't take new concepts.
 
 ## Steps
 
@@ -21,14 +22,21 @@ treated here as immutable.
    bundle-root `index.md` declares `okf_version`. If it fails, report the problems and **stop** —
    don't silently rewrite a bundle you didn't author; fixing is the human's call or a follow-up
    `lint`. Only a passing bundle proceeds.
-4. **Register** the bundle — add a row to `bundles/index.md`, drawing the description from the
+4. **Check for templates.** `ingest` and `query` write concepts from `templates/<type>.md`, so a
+   bundle without them can't be extended in place. If `templates/` is missing or doesn't cover every
+   `type:` in use, say so and **offer** to derive a skeleton per uncovered type from the concepts that
+   already exist — their shared frontmatter keys and headings become the template, with the rules the
+   human states going in `# Authoring`. Confirm before writing; the imported concepts stay untouched
+   either way (templates are additive tooling, not a rewrite).
+5. **Register** the bundle — add a row to `bundles/index.md`, drawing the description from the
    bundle's own `index.md`: `* [<name>](<name>/) - <description>`. Make the description convey the
    bundle's **scope** (its concept types / key topics), not just a bare label, so a query can tell from
    the catalog alone whether this bundle is relevant. Remove the `_(no bundles yet)_` placeholder if
    present.
-5. **Log it.** Append an entry to `memory/journal.md` naming the bundle and where it came from. Leave
+6. **Log it.** Append an entry to `memory/journal.md` naming the bundle and where it came from. Leave
    the bundle's own `log.md` untouched — it is the bundle's authored history, not the assistant's.
 
 ## Done when
 
-The bundle lives under `bundles/<name>/`, passed OKF conformance, and is listed in `bundles/index.md`.
+The bundle lives under `bundles/<name>/`, passed OKF conformance, is listed in `bundles/index.md`, and
+either has a template per `type:` in use or the human knows which are missing.

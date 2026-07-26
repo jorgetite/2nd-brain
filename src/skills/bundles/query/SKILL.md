@@ -19,7 +19,8 @@ being lost in chat.
    the answer draws on more than one bundle, **attribute** each fact to the bundle/concept it came
    from. If the bundles can't answer, say so plainly — *Truth over invention* — and note the gap.
 3. **File valuable results back.** If the synthesis is durable and not already captured, record it as
-   a new concept (with a `type:`) or fold it into an existing one. A cross-cutting synthesis goes into
+   a new concept or fold it into an existing one — writing it exactly as `skills/bundles/ingest` step 4
+   does, from the bundle's `templates/<type>.md`. A cross-cutting synthesis goes into
    the **single most-relevant bundle**; if it belongs to no single bundle, leave it in the reply
    rather than forcing it somewhere (*One fact, one home*). Update that bundle's `index.md` and
    `log.md`, and cross-link.

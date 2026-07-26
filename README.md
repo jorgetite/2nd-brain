@@ -109,7 +109,7 @@ Everything the assistant is and does lives in editable markdown under `assistant
 
 - **Identity & principles** — edit `memory/core.md` (or re-run `init`) to change the assistant's name, domain, purpose, and core principles.
 - **Routing & conventions** — edit `memory/procedural.md` to add skill routes, operating rules, or conventions.
-- **Knowledge structure** — a bundle's concept types live in its `templates/` (created for you by `create`); edit them to match the domain.
+- **Knowledge structure** — a bundle's concept types live in its `templates/` (created for you by `create`). A template *is* the page format for its type: edit its frontmatter and headings to change how those pages look, and put per-type rules in its `# Authoring` section, which the assistant obeys and then strips.
 - **Add a skill** — create `skills/<group>/<name>/SKILL.md` (Agent Skills format), with `scripts/` or `assets/` if it needs them, then add a route for it in `memory/procedural.md`.
 
 The assistant also customizes itself over time: `reflect` promotes durable learnings from its activity log into its memory and skills.
