@@ -11,12 +11,19 @@ covers multiple areas.
 ```
 bundles/
 ├── index.md                  # catalog of all bundles (progressive disclosure)
-└── <name>/                   # one OKF-compliant bundle
-    ├── index.md                  # OKF listing; declares okf_version: "0.1"
+└── photography/              # one OKF-compliant bundle
+    ├── index.md                  # OKF listing of the type folders; declares okf_version: "0.1"
     ├── log.md                    # change history, newest-first, ISO dates
-    ├── templates/<type>.md       # binding per-type page format (tooling, not concepts)
+    ├── templates/                # binding per-type page formats (tooling, not concepts)
+    │   ├── recipe.md
+    │   └── film-stock.md
     ├── references/               # optional: cited source copies
-    └── <concept>.md              # concepts, organized into subdirectories as needed
+    ├── recipe/                   # one folder per concept type, mirroring templates/
+    │   ├── index.md
+    │   └── hp5-plus-in-dd-x-1-4.md
+    └── film-stock/
+        ├── index.md
+        └── kodak-tri-x.md
 ```
 
 ## OKF conventions
@@ -26,9 +33,9 @@ bundles/
   8601). Conventional body sections: `# Schema`, `# Examples`, `# Citations`.
 - **Reserved files.** Only `index.md` (a markdown-list listing for progressive disclosure) and
   `log.md` (a newest-first change history under `## YYYY-MM-DD` headings) have defined meaning. OKF
-  allows an `index.md` at **any directory level**, so a large bundle can group concepts into
-  subdirectories — each with its own `index.md`, linked from its parent — to stay progressively
-  disclosed.
+  allows an `index.md` at **any directory level**, which is what lets a bundle group concepts into
+  per-type folders — each with its own `index.md`, linked from its parent — and stay progressively
+  disclosed as it grows.
 - **Links.** Relate concepts with the absolute bundle-relative form `[title](/path/to/concept.md)` —
   the leading `/` is relative to the **bundle root**. Links stay within a bundle (bundles are
   self-contained); connect across bundles via the `bundles/index.md` catalog, not links. Broken links
@@ -40,7 +47,7 @@ bundles/
 
 OKF leaves `type` a free string with no schema attached. A bundle pins its own down in
 `templates/<type>.md`, which `create` writes, `ingest` and `query` write concepts from, and `lint`
-audits against. Two rules make it binding:
+audits against. Three rules make it binding:
 
 1. **The structure is the format.** A concept of type `X` carries the frontmatter keys and the heading
    set and order of `templates/X.md`, with each `{{placeholder}}` filled. Sections are dropped only
@@ -50,9 +57,17 @@ audits against. Two rules make it binding:
    the skeleton alone can't express (field conventions, a required structured record, what to do with
    partial information). The assistant obeys it while filling and deletes it, so it never reaches a
    concept page. `{{ }}` marks a slot to fill; `# Authoring` states a rule.
+3. **The type is also the folder.** A concept of type `X` lives at `<X>/<name>.md` beside an
+   `<X>/index.md`, so the bundle's layout mirrors its `templates/` one-to-one and the template
+   governing any page is derivable from its path. The bundle's root `index.md` lists the type folders
+   rather than individual concepts. Cross-links carry the type segment:
+   `[HP5 Plus in DD-X (1+4)](/recipe/hp5-plus-in-dd-x-1-4.md)`.
 
 This is the customization surface: to change how a type's pages look, edit its template. Templates
 are tooling rather than knowledge, so they're exempt from the concept conformance rule above.
+
+A bundle adopted through `import` is the exception to rule 3 — it was authored elsewhere and keeps
+whatever layout it came with; `ingest` and `lint` follow that layout rather than restructuring it.
 
 ## The operations
 

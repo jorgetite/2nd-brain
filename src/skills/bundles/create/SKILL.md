@@ -20,8 +20,9 @@ Creating a bundle is **human-initiated** — confirm the domain with the human b
    conventions) — those become the template's shape and its `# Authoring` section. Ask; do not
    invent — *Truth over invention*.
 3. **Create the bundle directory** `bundles/<name>/` with:
-   - **`index.md`** — the OKF listing. Give it frontmatter declaring the format version, then an
-     empty list to fill as concepts are added:
+   - **`index.md`** — the OKF listing. Give it frontmatter declaring the format version, then a row
+     per type folder (step 2's types) — the root index is a table of contents **by type**, not a flat
+     list of concepts:
 
      ```markdown
      ---
@@ -32,7 +33,7 @@ Creating a bundle is **human-initiated** — confirm the domain with the human b
 
      # <name>
 
-     _(no concepts yet)_
+     * [<type>](/<type>/) - <what this type holds>
      ```
    - **`log.md`** — the OKF change history (newest-first, ISO dates):
 
@@ -41,6 +42,20 @@ Creating a bundle is **human-initiated** — confirm the domain with the human b
 
      ## YYYY-MM-DD
      * **Initialization**: Created the bundle.
+     ```
+   - **`<type>/index.md`** — one folder per concept type from step 2, each with its own OKF listing.
+     Concepts of that type live here (see `skills/bundles/ingest`), so the bundle's layout mirrors its
+     `templates/` one-to-one. Start each empty:
+
+     ```markdown
+     ---
+     title: <type>
+     description: <what this type holds>
+     ---
+
+     # <type>
+
+     _(no concepts yet)_
      ```
    - **`templates/<type>.md`** — one skeleton per concept type from step 2. A template is the
      **binding format** for its type: its frontmatter keys and its heading set and order are what a
@@ -86,5 +101,5 @@ Creating a bundle is **human-initiated** — confirm the domain with the human b
 ## Done when
 
 `bundles/<name>/` holds a conformant `index.md` (with `okf_version`), a `log.md` with an
-Initialization entry, and at least one `templates/<type>.md`; and the bundle is listed in
-`bundles/index.md`.
+Initialization entry, and at least one type — its `templates/<type>.md` paired with a `<type>/index.md`
+the root index links to; and the bundle is listed in `bundles/index.md`.

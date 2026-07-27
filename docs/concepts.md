@@ -17,7 +17,7 @@ more [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-ca
 - **The bundles** — curated, interlinked OKF concepts (`bundles/<name>/`), each with its own
   `index.md` listing and `log.md` history.
 - **The schema** — OKF's free-string concept `type` plus each bundle's own `templates/`, which bind
-  the page format for every type it tracks.
+  the page format for every type it tracks and give each one its folder.
 
 Three operations form the lifecycle, one skill each: **ingest**, **query**, **lint**. The assistant
 manages several bundles — one per domain — instead of a single wiki. See [bundles](bundles.md).

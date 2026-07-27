@@ -12,7 +12,7 @@ being lost in chat.
 
 1. **Locate.** Scan the **whole** `bundles/index.md` catalog and open **every** bundle whose domain
    could plausibly bear on the question — don't stop at the first match; a question may span several
-   bundles. Enter each at its `index.md`, follow into any subdirectory `index.md` as needed, and read
+   bundles. Enter each at its `index.md`, follow into the type folders' own `index.md` as needed, and read
    the relevant concepts via their `[title](/path/to/concept.md)` links (the leading `/` is
    bundle-root-relative).
 2. **Synthesize** an answer grounded only in what the concepts (and their cited sources) support. When

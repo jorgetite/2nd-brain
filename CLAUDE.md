@@ -20,7 +20,7 @@ Instead of re-retrieving and re-synthesizing knowledge on every query (classic R
 
 - **Raw Sources** — immutable input documents (articles, papers, notes, data) under `sources/`.
 - **The Bundles** — LLM-maintained OKF concepts: markdown files under `bundles/<name>/`, each carrying a required `type:` in YAML frontmatter, cross-linked with absolute bundle-relative links.
-- **The Schema** — OKF's free-string concept `type` plus each bundle's own `templates/` skeletons (there is no separate schema file). A `templates/<type>.md` is **binding**: a concept keeps its frontmatter keys and heading set/order, fills every `{{placeholder}}`, and obeys then deletes its `# Authoring` rules section.
+- **The Schema** — OKF's free-string concept `type` plus each bundle's own `templates/` skeletons (there is no separate schema file). A `templates/<type>.md` is **binding**: a concept keeps its frontmatter keys and heading set/order, fills every `{{placeholder}}`, and obeys then deletes its `# Authoring` rules section. Type also determines placement — a concept of type `X` lives at `<X>/<name>.md`, so a bundle's folders mirror its templates.
 
 Three core operations define the lifecycle:
 
@@ -28,7 +28,7 @@ Three core operations define the lifecycle:
 - **Query** — search relevant concepts, synthesize an answer, and **file valuable results back into a bundle** rather than losing them in chat history.
 - **Lint** — periodically audit for OKF conformance, contradictions, stale claims, orphaned concepts, and broken links.
 
-Within each bundle, navigation relies on two reserved files: `index.md` (a progressive-disclosure listing) and `log.md` (chronological, newest-first change history). OKF allows an `index.md` at any directory level, so a large bundle nests subdirectory indexes to stay progressively disclosed. A `bundles/index.md` catalog lists the bundles themselves. The key insight: the expensive part of a knowledge base is the *bookkeeping*, so that work is delegated to the LLM.
+Within each bundle, navigation relies on two reserved files: `index.md` (a progressive-disclosure listing) and `log.md` (chronological, newest-first change history). OKF allows an `index.md` at any directory level, which is what lets a bundle give each concept type its own folder and index and stay progressively disclosed as it grows. A `bundles/index.md` catalog lists the bundles themselves. The key insight: the expensive part of a knowledge base is the *bookkeeping*, so that work is delegated to the LLM.
 
 > Note: this project's own agent memory (under the harness's memory directory) follows the same spirit — one fact per file, an index that points at them, links between related facts. The user-facing bundles and the agent's operational memory are distinct stores; keep them separate.
 

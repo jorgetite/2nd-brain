@@ -21,8 +21,10 @@ existing concepts rather than appending duplicates.
    - New concept → copy `templates/<type>.md` and fill it. The template is **binding**: keep its
      frontmatter keys and its heading set and order (drop a section only where the template says it
      may be omitted); replace every `{{placeholder}}`; obey the `# Authoring` rules and then **delete
-     that section**. Set `timestamp` to today. Name the file kebab-case, place it at the bundle root
-     or in the right subdirectory.
+     that section**. Set `timestamp` to today. Name the file kebab-case and place it in the folder
+     matching its type — `<type>/<name>.md`, mirroring the `templates/<type>.md` it came from. (An
+     **imported** bundle keeps whatever layout it was authored with; follow that instead of imposing
+     this one — its structure isn't ours to restructure.)
    - Existing concept → integrate the new facts in place; reconcile, don't append blindly; bump its
      `timestamp`. Bring the page up to its template while you're there if the template has since
      gained sections or fields it lacks.
@@ -30,10 +32,10 @@ existing concepts rather than appending duplicates.
      `[title](/path/to/concept.md)`. Trace every claim to the source under a `# Citations` section,
      citing it by its `sources/library/<file>` path (its permanent home after step 8) — a stable,
      greppable key that lets `skills/bundles/remove` find this bundle's backing sources later.
-5. **Update the `index.md`** — add/adjust the list entry for each created or renamed concept. If a
-   concept lives in a subdirectory, update that subdirectory's own `index.md` (create it if the
-   subdirectory is new) and make sure the parent `index.md` links to the subdirectory — so large
-   bundles stay progressively disclosed.
+5. **Update the `index.md`** — add/adjust the list entry for each created or renamed concept in its
+   own `<type>/index.md`. The root `index.md` lists the type folders, so it only needs touching when a
+   type folder is new (create its `index.md` too) — that split is what keeps a large bundle
+   progressively disclosed.
 6. **Append to the bundle `log.md`** — a `* **Creation**`/`* **Update**` bullet under a
    `## YYYY-MM-DD` heading (newest first) naming what changed.
 7. **Surface time-sensitive facts.** If the source carries anything with a shelf life — deadlines,
