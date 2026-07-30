@@ -48,7 +48,7 @@ cat > "$target/bundles/index.md" <<'CATALOG'
 # Bundles
 
 Catalog of this assistant's OKF knowledge bundles. `skills/bundles/query` and `ingest` read it to
-find the right bundle; `skills/bundles/create` adds a row.
+find the right bundle; `skills/bundles/create` and `import` add a row, `remove` deletes one.
 
 _(no bundles yet)_
 CATALOG

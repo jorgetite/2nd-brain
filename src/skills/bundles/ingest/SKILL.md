@@ -11,8 +11,13 @@ existing concepts rather than appending duplicates.
 ## Steps
 
 1. **Take a source** from `sources/inbox/`. Read it; do not edit it (*Sources are immutable*).
-2. **Pick the target bundle.** Read `bundles/index.md` and choose the bundle whose domain owns this
-   material. If none fits, create one first with `skills/bundles/create`.
+   Ingest also accepts a **hand-off with no source file** — a fact from `skills/core/remember` or a
+   learning promoted by `skills/core/reflect`. For those, cite per the sourceless form in the
+   Source-citations convention (`memory/procedural.md`) and skip step 8.
+2. **Pick the target bundle(s).** Read `bundles/index.md` and choose the bundle whose domain owns
+   this material. A source spanning domains files each part into the bundle owning it — each cites
+   the same `sources/library/<file>` (shared sources are expected; `skills/bundles/remove` accounts
+   for them). If none fits, create one first with `skills/bundles/create`.
 3. **Decide concept types** by listing the target bundle's `templates/`. One source may touch several
    concepts. If the material needs a type with no `templates/<type>.md`, **stop and ask** the human —
    add the template (`skills/bundles/create` step 3 has the shape) or use an existing type. Never

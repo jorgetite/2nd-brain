@@ -83,6 +83,7 @@ Route what you learn to its home (the *One fact, one home* principle):
 | Durable knowledge for the human | a bundle — via `skills/bundles/ingest` or `query` |
 | A new repeatable workflow + its trigger | a skill under `skills/` + a route in the Skill routing table |
 | An operating convention (rare) | `memory/procedural.md` |
+| A lasting principle of behavior (rare) | `memory/core.md` |
 
 (`ingest` also mirrors a source's time-sensitive facts into `state.md` while the durable knowledge goes to the bundle.)
 
@@ -96,6 +97,6 @@ Route what you learn to its home (the *One fact, one home* principle):
 - **Concept placement:** a concept of type `X` lives at `<X>/<name>.md` with its own `<X>/index.md`, mirroring `templates/<X>.md`; the bundle's root `index.md` lists the type folders. Imported bundles keep their authored layout.
 - **Cross-linking:** link concepts with the OKF bundle-relative form `[title](/path/to/concept.md)` — the leading `/` is the **bundle root**, not the working dir or repo root. Links stay within a bundle (bundles are self-contained); connect across bundles via the `bundles/index.md` catalog, not links. A link to a not-yet-created concept is a fine work marker (broken links tolerated).
 - **Filenames:** kebab-case.
-- **Source citations:** cite a global source under `# Citations` by its `sources/library/<file>` path — a stable, greppable key so the claim is traceable and `skills/bundles/remove` can find a bundle's backing sources.
+- **Source citations:** cite a global source under `# Citations` by its `sources/library/<file>` path — a stable, greppable key so the claim is traceable and `skills/bundles/remove` can find a bundle's backing sources. Knowledge with no backing file — a fact from the human, or a synthesis — is cited as `human — YYYY-MM-DD` or by cross-links to the concepts it derives from.
 - **Sources are immutable:** read and relocate, never edit content. `inbox/` awaits ingestion; `library/` backs a bundle; `archive/` holds sources retired with their last citing bundle.
 - **Keep L1/L2 lean:** `core.md`/`procedural.md` load on every cold start (procedural is the bulk). Keep them tight — push detail into skills or bundles; don't split `procedural.md` (trades tokens for round-trips).

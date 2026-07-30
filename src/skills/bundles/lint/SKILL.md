@@ -1,6 +1,6 @@
 ---
 name: lint
-description: Audit a bundle for OKF conformance plus contradictions, stale claims, orphans, broken links, and index/log drift; fix what's clear and report the rest. Run periodically to keep a knowledge base healthy.
+description: Audit a bundle (or all of them) for OKF conformance plus contradictions, stale claims, orphans, broken links, and index/log/catalog drift; fix what's clear and report the rest. Run periodically to keep a knowledge base healthy.
 ---
 
 # Lint
@@ -9,7 +9,9 @@ A bundle's bookkeeping pass. Keep it conformant and coherent so it stays trustwo
 
 ## Checks
 
-For each bundle in `bundles/index.md`, scan its concepts, `index.md`, and `log.md` for:
+Lint one named bundle, or — unscoped — every bundle in `bundles/index.md`. The checks marked
+*(catalog)* are catalog-level and always run across all bundles, whatever the scope. For each
+bundle in scope, scan its concepts, `index.md`, and `log.md` for:
 
 - **OKF conformance** — every non-reserved `.md` has parseable YAML frontmatter with a non-empty
   `type:` (reserved `index.md`/`log.md` are exempt, as is everything under `templates/` — templates
@@ -26,14 +28,20 @@ For each bundle in `bundles/index.md`, scan its concepts, `index.md`, and `log.m
 - **Orphans** — concepts nothing links to and that the index doesn't surface.
 - **Contradictions** — concepts making incompatible claims; reconcile against their cited sources.
 - **Stale claims** — facts contradicted by a newer source in `sources/library/`.
-- **Untraced claims** — statements with no source behind them.
+- **Untraced claims** — statements with no citation behind them: neither a `sources/library/<file>`
+  path nor a sourceless form (`human — YYYY-MM-DD`, or cross-links to the concepts it derives from).
 - **Template drift** — a concept whose frontmatter keys or heading set/order don't match its type's
   `templates/<type>.md`.
 - **Missing template** — a `type:` in use with no `templates/<type>.md` to define its format.
 - **Leaked scaffolding** — an unfilled `{{placeholder}}` or an `# Authoring` section inside a concept;
   both belong only to templates.
 - **Convention drift** — non-kebab-case filenames.
-- **Catalog drift** — `bundles/index.md` missing a bundle or pointing at a removed one.
+- **Catalog drift** *(catalog)* — `bundles/index.md` missing a bundle, pointing at a removed one, or
+  carrying a row description that no longer conveys the bundle's current scope (its concept types /
+  key topics) — stale descriptions mis-route `query` and `ingest`.
+- **Cross-bundle contradictions** *(catalog)* — for each `sources/library/<file>` cited by more than
+  one bundle (grep every bundle's `# Citations`, as `skills/bundles/remove` step 4 does), the claims
+  citing it must agree across those bundles; reconcile against the source.
 
 ## Steps
 
