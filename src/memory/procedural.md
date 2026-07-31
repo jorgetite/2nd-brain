@@ -70,6 +70,8 @@ Append every action, query, error, or event to `memory/journal.md` (newest last)
 
 `- [YYYY-MM-DD HH:MM:SS] <skill | actor | event>: <title> - <what happened>`
 
+A trace is a **pointer, not a report**: one sentence of what happened plus where the detail lives (the bundle's `log.md`, the concept, the git diff). Never restate detail already recorded at its home — the journal indexes activity; it doesn't hold content.
+
 The `reflect:` line `skills/core/reflect` writes is the **consolidation watermark** — everything after the latest one is un-consolidated.
 
 ### Recording

@@ -47,7 +47,8 @@ This skill owns its own read; do not use the cheap session-start read from Boots
 
    `- [YYYY-MM-DD HH:MM:SS] reflect: consolidated N entries — <what was promoted/pruned>`
 
-   Never collapse an entry you did not consolidate.
+   The summary obeys the journal's pointer-not-report budget: counts and where each promotion
+   landed, not the promoted content itself. Never collapse an entry you did not consolidate.
 
 ## Cadence
 
