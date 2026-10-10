@@ -21,21 +21,23 @@ Settle these with the human by proposing a draft for them to correct, not by ask
   reference an existing one, propose extending that bundle instead.
 - **Concept types** — the kinds of thing it tracks, each with a draft template: the frontmatter fields
   and content headings that suit it (a `camera`: mount, sensor, serial, firmware, purchase; a
-  `maintenance-task`: interval, last done, procedure) and any rules for its `# Authoring` section.
-  Proposing a format is design, not invention — facts about the human's things still come only from
-  sources or the human. A type name becomes a folder, so `index`, `log`, `templates`, and `references`
-  are unavailable. For a running record (workouts, measurements, maintenance history), prefer one
+  `maintenance-task`: interval, last done, procedure) and any rules for its `# Authoring` section —
+  including how long its facts stay current (firmware or prices: months; a finished build: never),
+  which sets each concept's `stale_after`. Proposing a format is design, not invention — facts about
+  the human's things still come only from sources or the human. A type name becomes a folder, so
+  `index`, `log`, `templates`, and `references` are unavailable. For a running record (workouts, measurements, maintenance history), prefer one
   concept per period or plan over one per entry, so the folder stays browsable.
 
 ## Build
 
 Write the files in one batch — none depends on another — from the skeletons in `assets/`:
 
-- `bundles/<name>/index.md` from `assets/bundle-index.md` — declares `okf_version` and lists one row
-  per type folder (a table of contents by type, not by concept);
+- `bundles/<name>/index.md` from `assets/bundle-index.md` — its only frontmatter is `okf_version`, and
+  it lists one row per type folder with what the type holds (a table of contents by type, not by
+  concept);
 - `bundles/<name>/log.md` from `assets/bundle-log.md`, with an Initialization entry dated today;
-- per type, `<type>/index.md` from `assets/type-index.md` and `templates/<type>.md` from
-  `assets/concept-template.md`, shaped to the agreed design. The skeleton is a starting point, not a
+- per type, `<type>/index.md` from `assets/type-index.md` (OKF index files carry no frontmatter) and
+  `templates/<type>.md` from `assets/concept-template.md`, shaped to the agreed design. The skeleton is a starting point, not a
   ceiling; the finished template is binding for its type (Concept templates convention,
   `memory/procedural.md`).
 

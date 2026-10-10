@@ -35,8 +35,8 @@ Keep three kinds of support distinct:
 A synthesis worth keeping and not already captured becomes a new concept or an update to an existing
 one in the single most-relevant bundle, written from its template exactly as `skills/bundle-ingest`
 step 5 does, with that bundle's `index.md` and `log.md` updated. If it belongs to no bundle, leave it
-in the reply (*One fact, one home*). Cite a looked-up fact as `<URL> — retrieved YYYY-MM-DD`. Tell the
-human in one line what you filed and where. Filing nothing back is fine; answering about the human's
+in the reply (*One fact, one home*). A looked-up fact is cited as a `sources` entry with its URL and a
+`retrieved:` datetime. Tell the human in one line what you filed and where. Filing nothing back is fine; answering about the human's
 own things without checking the bundles is not.
 
 Log the query in `memory/journal.md`.

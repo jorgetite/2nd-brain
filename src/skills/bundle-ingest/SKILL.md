@@ -19,10 +19,10 @@ knowledge is filed.
    can't read rather than guessing. From a long source such as a manual, extract what's durable for
    the human, not a transcript. If the same source is already in `sources/library/` (same name or
    content), treat this as an update of it. A hand-off with no file — a fact from
-   `skills/memory-remember` or a learning from `skills/memory-reflect` — uses the sourceless citation
+   `skills/memory-remember` or a learning from `skills/memory-reflect` — is cited by its own source
    form (Source-citations convention, `memory/procedural.md`) and skips steps 2 and 8.
 2. **Name its library home** now — kebab-case, date-prefixed when useful, unique in
-   `sources/library/`. That path is what every concept will cite.
+   `sources/library/`. Every concept will cite it as `library:<file>`.
 3. **Route.** Choose the owning bundle from `bundles/index.md`, honouring each row's *Not here*
    boundaries. A source spanning domains (a receipt for a camera and a router) gives each bundle its
    own slice, all citing the same library path. Material that fits two bundles equally, or none,
@@ -34,15 +34,19 @@ knowledge is filed.
 5. **File the knowledge.**
    - New concept → fill `templates/<type>.md`. The template is **binding**: keep its frontmatter keys
      and heading set and order (drop a section only where it says so), replace every
-     `{{placeholder}}`, obey the `# Authoring` rules and then delete that section. Set `timestamp` to
-     today and save as `<type>/<name>.md` in kebab-case. (An imported bundle keeps its authored
-     layout; follow it.)
-   - Existing concept → integrate in place, bump `timestamp`, and bring the page up to its template
-     if the template has gained sections. When the new material contradicts the page, keep the newer
-     fact, note the old value with its date where history matters (a firmware version, a weight),
-     and flag it if it's unclear which is right.
-   - Cross-link within the bundle with `[title](/path/to/concept.md)`, and cite every claim under
-     `# Citations` by the step 2 library path.
+     `{{placeholder}}`, obey the `# Authoring` rules and then delete that section. Save it as
+     `<type>/<name>.md` in kebab-case. (An imported bundle keeps its authored layout and OKF version;
+     follow them.)
+   - Existing concept → integrate in place and bring the page up to its template if the template has
+     gained sections. When the new material contradicts the page, keep the newer fact, note the old
+     value with its date where history matters (a firmware version, a weight), and flag it if it's
+     unclear which is right. Something the human no longer has or uses (a sold camera, a retired
+     host) becomes `status: deprecated` rather than being deleted, so its links and history survive.
+   - Record provenance in frontmatter: add the source to `sources` (the step 2 file as
+     `library:<file>`) and end each claim it supports with that entry's footnote (`[^id]`). Set
+     `generated` to this assistant and the current time; set `stale_after` from the type's horizon;
+     add `verified` by `human:<id>` only for content the human stated or confirmed.
+   - Cross-link within the bundle with `[title](/path/to/concept.md)`.
    - Never copy a secret into a concept — passwords, keys, tokens, full card or account numbers.
      Record where it lives instead (*Discretion*); the source keeps the original.
 6. **Update the index and log** — each new or renamed concept in its `<type>/index.md` (the root

@@ -13,7 +13,8 @@ or every bundle in `bundles/index.md`; checks marked *(catalog)* always cover al
 Run these as searches over the files (grep, find) rather than reading every page:
 
 - **OKF conformance** — every non-reserved `.md` outside `templates/` has frontmatter with a non-empty
-  `type:`; the root `index.md` declares `okf_version`.
+  `type:`; index files carry no frontmatter except `okf_version` in the bundle root's, which this
+  assistant's bundles declare.
 - **Layout** — each concept sits at `<type>/<name>.md` matching its `type:` (imported bundles keep
   their authored layout).
 - **Indexes** — every type folder has an `index.md` that lists exactly its concepts and is linked from
@@ -24,6 +25,9 @@ Run these as searches over the files (grep, find) rather than reading every page
 - **Templates** — every `type:` in use has a template; each concept's frontmatter keys and heading set
   and order match it; no `{{placeholder}}` or `# Authoring` is left in a concept.
 - **Filenames** — kebab-case.
+- **Provenance** — every footnote label (`[^id]`) matches an `id` in the concept's `sources`.
+- **Past `stale_after`** — concepts whose `stale_after` has passed; list them for review, or refresh
+  them with a lookup when the harness allows (updating `generated` and `stale_after`).
 - **Secrets** — passwords, keys, tokens, private-key blocks, full card or account numbers.
 - **Catalog** *(catalog)* — every bundle listed and none missing; *Not here* boundaries reciprocal.
 
@@ -40,14 +44,13 @@ since the last lint (from the bundle's `log.md`, or the last `bundle-lint` journ
 citing library sources added since:
 
 - **Contradictions** — within a bundle, and *(catalog)* across bundles citing the same
-  `sources/library/<file>`; reconcile against the source.
+  `library:<file>`; reconcile against the source.
 - **Stale claims** — facts a newer source contradicts.
-- **Aging facts** — versions, prices, ownership, or status on pages untouched for a long time (a
-  template's `# Authoring` may set the horizon); verify with a lookup when the harness allows,
-  otherwise list them for review.
-- **Untraced claims** — statements with no citation: a `sources/library/<file>` path,
-  `human — YYYY-MM-DD`, `<URL> — retrieved YYYY-MM-DD`, or cross-links to the concepts they derive
-  from.
+- **Aging facts** — on pages without a `stale_after`, versions, prices, ownership, or status left
+  untouched for a long time; propose a horizon for the type's template, and verify with a lookup when
+  the harness allows.
+- **Untraced claims** — statements no `sources` entry supports (a `library:` file, `human:<id>`, a
+  URL, or the concepts a synthesis derives from).
 - **Misplaced material** — concepts that a catalog boundary assigns to another bundle.
 - **Scope drift** *(catalog)* — a catalog row that no longer describes the bundle's current types and
   topics, which mis-routes `bundle-query` and `bundle-ingest`.

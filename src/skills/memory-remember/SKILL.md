@@ -10,7 +10,8 @@ The human-facing way to capture a fact. File each one where it belongs (the Reco
 
 - **About the human's things, people, or history** — a serial number, a filter size, an allergy, a
   kit's paint scheme — and still true a year from now: durable knowledge. Hand it to
-  `skills/bundle-ingest`, which files it into the right bundle, cited as `human — YYYY-MM-DD`.
+  `skills/bundle-ingest`, which files it into the right bundle with the human as its source
+  (`human:<id>`) and marks it verified by them.
 - **Tied to a date or a shelf life** — an appointment, a renewal, a chore, the status of something in
   progress: `memory/state.md`, in the formats it defines — a date goes to *Upcoming Deadlines* (with a
   `Repeats` interval for a recurring chore), open-ended context to *Entries* with an expiry or `review`.

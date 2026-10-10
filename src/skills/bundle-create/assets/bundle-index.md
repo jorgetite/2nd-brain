@@ -1,7 +1,5 @@
 ---
-okf_version: "0.1"
-title: <name>
-description: <one-line scope of the bundle>
+okf_version: "0.2"
 ---
 
 # <name>

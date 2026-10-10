@@ -13,11 +13,12 @@ install is broken — ask the human to re-install rather than recreating them.
 
 Ask for everything in one round, offering a sensible default for each so the human can accept or
 correct (use the harness's structured-question tool if it has one): the assistant's name and
-one-sentence purpose; the areas of life or work to cover; and standing preferences — units, time
-zone, language, how replies should read. Don't invent answers (*Truth over invention*). On a re-run,
+one-sentence purpose; a short kebab-case id for the human (it attributes what they state or confirm,
+as `human:<id>`); the areas of life or work to cover; and standing preferences — units, time zone,
+language, how replies should read. Don't invent answers (*Truth over invention*). On a re-run,
 change only what the human asks to change.
 
-Fill `{{assistant-name}}`, `{{scope}}`, and `{{purpose}}` in `memory/core.md`, and record the
+Fill `{{assistant-name}}`, `{{human-id}}`, `{{scope}}`, and `{{purpose}}` in `memory/core.md`, and record the
 preferences under its *Preferences*. Leave the Principles as they are unless the human adds one.
 
 ## Propose the bundles

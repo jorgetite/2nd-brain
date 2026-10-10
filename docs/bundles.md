@@ -2,7 +2,7 @@
 
 The assistant's knowledge lives in one or more **bundles** under `bundles/`. A bundle is an
 [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
-(OKF v0.1) directory tree — portable, human- and agent-friendly markdown that needs no special
+(OKF v0.2) directory tree — portable, human- and agent-friendly markdown that needs no special
 tooling to read or write. Managing several bundles — one per domain — is how a single assistant
 covers multiple areas.
 
@@ -12,7 +12,7 @@ covers multiple areas.
 bundles/
 ├── index.md                  # catalog of all bundles (progressive disclosure)
 └── photography/              # one OKF-compliant bundle
-    ├── index.md                  # OKF listing of the type folders; declares okf_version: "0.1"
+    ├── index.md                  # OKF listing of the type folders; only frontmatter: okf_version: "0.2"
     ├── log.md                    # change history, newest-first, ISO dates
     ├── templates/                # binding per-type page formats (tooling, not concepts)
     │   ├── recipe.md
@@ -29,11 +29,23 @@ bundles/
 ## OKF conventions
 
 - **Concepts.** Every non-reserved `.md` is a *concept* and MUST carry a `type:` in its YAML
-  frontmatter. Recommended fields: `title`, `description`, `resource`, `tags`, `timestamp` (ISO
-  8601). Body sections are content headings named for what they hold, plus `# Examples` and
-  `# Citations` where they apply; each type's template fixes the exact set.
-- **Reserved files.** Only `index.md` (a markdown-list listing for progressive disclosure) and
-  `log.md` (a newest-first change history under `## YYYY-MM-DD` headings) have defined meaning. OKF
+  frontmatter. Recommended fields: `title`, `description`, `resource`, `tags`. Body sections are
+  content headings named for what they hold, plus `# Examples` where it applies; each type's template
+  fixes the exact set.
+- **Provenance, trust, lifecycle.** Frontmatter also records where a concept came from and how far to
+  trust it:
+  - `sources` — one entry (`id`, `resource`, `title`) per source, with each claim ending in its
+    entry's footnote (`[^id]`). A `resource` is `library:<file>` for a file in `sources/library/`,
+    `human:<id>` for something the human stated, a URL (plus `retrieved:`) for something looked up,
+    or `/<type>/<concept>.md` for what a synthesis derives from.
+  - `generated: {by, at}` — who wrote the current content and when (an ISO 8601 datetime with offset).
+  - `verified` — set by `human:<id>` when the human stated or confirmed the content, which makes the
+    concept *human-reviewed*.
+  - `status` — `draft` or `deprecated` (a sold camera, a retired host); absent means stable.
+  - `stale_after` — the instant the content should be re-checked, from the type's horizon.
+- **Reserved files.** Only `index.md` (a markdown-list listing for progressive disclosure, with no
+  frontmatter except `okf_version` in the bundle root's) and `log.md` (a newest-first change history
+  under `## YYYY-MM-DD` headings) have defined meaning. OKF
   allows an `index.md` at **any directory level**, which is what lets a bundle group concepts into
   per-type folders — each with its own `index.md`, linked from its parent — and stay progressively
   disclosed as it grows.
@@ -42,7 +54,9 @@ bundles/
   self-contained); connect across bundles via the `bundles/index.md` catalog, not links. Broken links
   are tolerated — a link to a not-yet-written concept is a useful work marker.
 - **Conformance is minimal.** A bundle is conformant if every concept has parseable frontmatter with
-  a non-empty `type`. Unknown fields and broken links must be tolerated, never rejected.
+  a non-empty `type` and its index and log files follow their structure. Unknown fields, missing
+  optional fields or indexes, and broken links must be tolerated, never rejected. v0.1 bundles (with
+  `timestamp` and a `# Citations` section) stay readable; this assistant writes v0.2.
 
 ## Templates — the per-type page format
 

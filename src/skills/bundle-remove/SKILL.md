@@ -15,8 +15,9 @@ wants the knowledge kept in another bundle, that is a move, not a removal: file 
 1. **Survey, changing nothing.** Find the bundle in `bundles/index.md`; if it isn't listed, stop and
    say so. Work out exactly what removal touches:
    - the concepts, templates, and `references/` under `bundles/<name>/`;
-   - its backing sources — every `sources/library/<file>` its concepts cite. Those no other bundle
-     cites will move to `sources/archive/`; shared ones stay;
+   - its backing sources — every `library:<file>` in its concepts' `sources` (a v0.1 bundle cites
+     `sources/library/<file>` under `# Citations`). Those no other bundle cites will move to
+     `sources/archive/`; shared ones stay;
    - other bundles' catalog rows whose *Not here* clauses name it;
    - `memory/state.md` entries tagged with it — some, like recurring maintenance, may still matter.
 2. **Confirm once, with specifics** — the concept count, the sources to archive, each affected boundary
