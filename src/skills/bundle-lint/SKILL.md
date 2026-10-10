@@ -1,6 +1,6 @@
 ---
-name: lint
-description: Audit a bundle (or all of them) for OKF conformance plus contradictions, stale claims, orphans, broken links, and index/log/catalog drift; fix what's clear and report the rest. Run periodically to keep a knowledge base healthy.
+name: bundle-lint
+description: Audit one bundle or the whole catalog for OKF conformance, contradictions, stale claims, orphans, broken links, misplaced material, and index/log/catalog drift; fix what's clear and report the rest. Use periodically, or when the knowledge seems inconsistent.
 ---
 
 # Lint
@@ -36,24 +36,31 @@ bundle in scope, scan its concepts, `index.md`, and `log.md` for:
 - **Leaked scaffolding** — an unfilled `{{placeholder}}` or an `# Authoring` section inside a concept;
   both belong only to templates.
 - **Convention drift** — non-kebab-case filenames.
-- **Catalog drift** *(catalog)* — `bundles/index.md` missing a bundle, pointing at a removed one, or
+- **Catalog drift** *(catalog)* — `bundles/index.md` missing a bundle, pointing at a removed one,
   carrying a row description that no longer conveys the bundle's current scope (its concept types /
-  key topics) — stale descriptions mis-route `query` and `ingest`.
+  key topics), or a *Not here* boundary with no reciprocal clause on the other bundle's row — stale
+  rows mis-route `bundle-query` and `bundle-ingest`.
 - **Cross-bundle contradictions** *(catalog)* — for each `sources/library/<file>` cited by more than
-  one bundle (grep every bundle's `# Citations`, as `skills/bundles/remove` step 4 does), the claims
+  one bundle (grep every bundle's `# Citations`, as `skills/bundle-remove` step 4 does), the claims
   citing it must agree across those bundles; reconcile against the source.
+- **Misplaced material** — concepts that a catalog boundary assigns to another bundle, and links
+  that reach outside the bundle (bundles are self-contained). Report these; moving material between
+  bundles is the human's call.
 
-## Steps
+## Fix or report
 
-1. Run the checks above.
-2. **Fix the unambiguous** (index/log sync, obvious broken links, filename casing, missing `type:`
-   where the intended type is clear, leaked `# Authoring` sections, template drift that's pure
-   structure — a missing or misordered heading). Relocating a concept means moving the file **and**
-   rewriting every `](/old/path.md)` link pointing at it, plus both indexes — a bare move silently
-   breaks its inbound links.
-3. **Report the judgment calls** (contradictions, stale claims, missing templates, unfilled
-   `{{placeholders}}` — those need a fact from a source) to the human rather than guessing.
-4. **Log it.** Append a summary of what was fixed and what needs a decision to `memory/journal.md`.
+**Fix the unambiguous**: index/log sync, obvious broken links, filename casing, a missing `type:`
+where the intended type is clear, leaked `# Authoring` sections, and template drift that's pure
+structure (a missing or misordered heading). Relocating a concept means moving the file **and**
+rewriting every `](/old/path.md)` link pointing at it, plus both indexes — a bare move silently breaks
+its inbound links.
+
+**Report the judgment calls** — contradictions, stale claims, missing templates, misplaced material,
+unfilled `{{placeholders}}` — to the human rather than guessing; they need a fact or a decision.
+
+Bundles are independent, so when the harness supports sub-agents a whole-catalog lint can run one
+per bundle in parallel, followed by a single pass over the catalog itself. Log a summary of what was
+fixed and what needs a decision in `memory/journal.md`.
 
 ## Done when
 

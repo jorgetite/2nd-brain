@@ -1,6 +1,6 @@
 ---
-name: reflect
-description: Consolidate the journal into the upper memory layers and prune stale state — the self-improvement loop. Run at session end, or after a batch of new journal entries; not after every action.
+name: memory-reflect
+description: Consolidate the journal into durable memory, skills, and bundles, prune or roll forward stale state — the assistant's self-improvement loop. Use at session end, after a batch of new journal entries, or when the human asks the assistant to review and learn from recent work; not after every action.
 ---
 
 # Reflect
@@ -31,7 +31,7 @@ This skill owns its own read; do not use the cheap session-start read from Boots
    One-offs and routine actions are *not* promoted — they fall away when the journal is compacted.
 
 3. **Route each promotion by the Recording table** in `memory/procedural.md` (consult it; do not
-   copy it). In short: durable knowledge for the human → a bundle via `skills/bundles/ingest`; a new
+   copy it). In short: durable knowledge for the human → a bundle via `skills/bundle-ingest`; a new
    repeatable workflow → a skill under `skills/` **and** a route in `procedural.md`; a lasting
    principle → `memory/core.md`; still-current short-lived state → `memory/state.md` (date-anchored →
    *Upcoming Deadlines*, open-ended → *Entries*). De-dup: if a state fact was already recorded directly,
@@ -39,8 +39,10 @@ This skill owns its own read; do not use the cheap session-start read from Boots
 
 4. **Prune state (promote, then drop).** In `memory/state.md`, for any deadline whose date has passed
    or Entry past its `expires`: first record anything of lasting significance — the outcome to a dated
-   concept in a bundle, or a minor line in `memory/journal.md` — then remove it. Re-evaluate `review`
-   entries; drop items with no lasting value.
+   concept in a bundle, or a minor line in `memory/journal.md` — then remove it. A deadline with a
+   `Repeats` interval is not removed: roll its date forward by the interval (past today, if several
+   cycles were missed) and keep the table sorted. Re-evaluate `review` entries; drop items with no
+   lasting value.
 
 5. **Compact by collapsing.** Replace the un-consolidated block you just processed with a single
    summary line — this both bounds the journal and becomes the next watermark:
@@ -66,6 +68,8 @@ to expire. Do not run after every action.
 ## Cautions
 
 - Promote only what is genuinely durable; churn in `core.md` and `procedural.md` is a smell.
-- Self-edits stay within this assistant — change only its own `memory/` and `skills/`.
+- Self-edits stay within this assistant — change only its own `memory/` and `skills/`. If the
+  assistant is a git repository, commit the self-edits with a message naming what was promoted, so a
+  bad promotion can be rolled back.
 - After editing `core.md` or `procedural.md`, reload them — your in-context copy is now stale (see the
   force-reload rule in `memory/procedural.md` Bootstrapping).

@@ -46,7 +46,7 @@ bundles/
 ## Templates — the per-type page format
 
 OKF leaves `type` a free string with no schema attached. A bundle pins its own down in
-`templates/<type>.md`, which `create` writes, `ingest` and `query` write concepts from, and `lint`
+`templates/<type>.md`, which `bundle-create` writes, `bundle-ingest` and `bundle-query` write concepts from, and `bundle-lint`
 audits against. Three rules make it binding:
 
 1. **The structure is the format.** A concept of type `X` carries the frontmatter keys and the heading
@@ -66,22 +66,42 @@ audits against. Three rules make it binding:
 This is the customization surface: to change how a type's pages look, edit its template. Templates
 are tooling rather than knowledge, so they're exempt from the concept conformance rule above.
 
-A bundle adopted through `import` is the exception to rule 3 — it was authored elsewhere and keeps
-whatever layout it came with; `ingest` and `lint` follow that layout rather than restructuring it.
+A bundle adopted through `bundle-import` is the exception to rule 3 — it was authored elsewhere and keeps
+whatever layout it came with; `bundle-ingest` and `bundle-lint` follow that layout rather than restructuring it.
+
+## Choosing bundle boundaries
+
+Bundles don't link to each other, so draw them where the knowledge is self-contained: one bundle per
+domain, and **merge two domains that would constantly need to reference each other**. Where two
+bundles sit next to each other, record the boundary in the catalog with a *Not here* clause on both
+rows, so `bundle-ingest` can route material without guessing:
+
+```markdown
+* [home](home/) - rooms, appliances, maintenance, projects, contractors, warranties. Not here: servers, network gear → homelab
+* [homelab](homelab/) - hosts, services, network, runbooks, incidents. Not here: household appliances → home
+* [photography](photography/) - cameras, lenses, film stocks, recipes, techniques, shoots
+* [scale-modeling](scale-modeling/) - kits, paints, techniques, builds
+* [health](health/) - exercises, programs, monthly training logs, metrics, conditions
+```
+
+Cameras and photography share one bundle, as do fitness and health: split, they would need
+cross-links. A source that touches two bundles (one receipt for a lens and a switch) feeds each with
+its own slice and both cite the same `sources/library/` path. A question spanning bundles is answered
+by `bundle-query` reading all of them and attributing each fact to its bundle.
 
 ## The operations
 
 | Skill | Does |
 |---|---|
-| `bundles/create` | stand up a new bundle — its `index.md`, `log.md`, and per-type `templates/` — and register it in `bundles/index.md` |
-| `bundles/import` | adopt an existing OKF bundle authored elsewhere — place it under `bundles/`, verify conformance, and register it |
-| `bundles/remove` | retire a bundle — confirm, optionally preserve a copy, delete it, and deregister it (destructive, human-initiated) |
-| `bundles/ingest` | absorb a source from `sources/inbox/` into the right bundle as concepts written from its `templates/`; update its `index.md` and `log.md`; relocate the source to `library/` |
-| `bundles/query` | answer from the bundles and file valuable syntheses back as concepts |
-| `bundles/lint` | audit a bundle for OKF conformance, index/log drift, broken links, orphans, contradictions, and stale claims |
+| `bundle-create` | stand up a new bundle — its `index.md`, `log.md`, and per-type `templates/` — and register it in `bundles/index.md` |
+| `bundle-import` | adopt an existing OKF bundle authored elsewhere — place it under `bundles/`, verify conformance, and register it |
+| `bundle-remove` | retire a bundle — confirm, optionally preserve a copy, delete it, and deregister it (destructive, human-initiated) |
+| `bundle-ingest` | absorb a source from `sources/inbox/` into the right bundle as concepts written from its `templates/`; update its `index.md` and `log.md`; relocate the source to `library/` |
+| `bundle-query` | answer from the bundles and file valuable syntheses back as concepts |
+| `bundle-lint` | audit a bundle for OKF conformance, index/log drift, broken links, orphans, contradictions, and stale claims |
 
 Creating or removing a bundle is **human-initiated** — the assistant confirms the domain before adding
-one, and confirms (and offers to preserve a copy) before the destructive `remove`. The
+one, and confirms (and offers to preserve a copy) before the destructive `bundle-remove`. The
 `bundles/index.md` catalog is loaded at bootstrap so the assistant knows which bundles it owns.
 
 See also: [concepts](concepts.md), [memory model](memory.md).

@@ -1,5 +1,5 @@
 ---
-name: ingest
+name: bundle-ingest
 description: Absorb a new raw source from sources/inbox into an OKF bundle — extract, file into concepts, cross-link, update the bundle index and log, surface any time-sensitive facts into state.md, and relocate the source to library/. Use when new material needs to enter a knowledge base.
 ---
 
@@ -11,16 +11,18 @@ existing concepts rather than appending duplicates.
 ## Steps
 
 1. **Take a source** from `sources/inbox/`. Read it; do not edit it (*Sources are immutable*).
-   Ingest also accepts a **hand-off with no source file** — a fact from `skills/core/remember` or a
-   learning promoted by `skills/core/reflect`. For those, cite per the sourceless form in the
+   Ingest also accepts a **hand-off with no source file** — a fact from `skills/memory-remember` or a
+   learning promoted by `skills/memory-reflect`. For those, cite per the sourceless form in the
    Source-citations convention (`memory/procedural.md`) and skip step 8.
-2. **Pick the target bundle(s).** Read `bundles/index.md` and choose the bundle whose domain owns
-   this material. A source spanning domains files each part into the bundle owning it — each cites
-   the same `sources/library/<file>` (shared sources are expected; `skills/bundles/remove` accounts
-   for them). If none fits, create one first with `skills/bundles/create`.
+2. **Pick the target bundle(s).** Read `bundles/index.md` and choose the bundle whose scope owns this
+   material, honouring each row's *Not here* boundaries. If two bundles fit equally, ask the human. A
+   source that spans domains (a receipt covering a camera and a router) files each part into the
+   bundle owning it, and all cite the same `sources/library/<file>` (shared sources are expected;
+   `skills/bundle-remove` accounts for them). If none fits, create one first with
+   `skills/bundle-create`.
 3. **Decide concept types** by listing the target bundle's `templates/`. One source may touch several
    concepts. If the material needs a type with no `templates/<type>.md`, **stop and ask** the human —
-   add the template (`skills/bundles/create` step 3 has the shape) or use an existing type. Never
+   add the template (`skills/bundle-create` step 3 has the shape) or use an existing type. Never
    invent a type or a page format on the fly — *Truth over invention*.
 4. **File the knowledge.** For each affected concept:
    - New concept → copy `templates/<type>.md` and fill it. The template is **binding**: keep its
@@ -36,7 +38,7 @@ existing concepts rather than appending duplicates.
    - Cross-link related concepts with the OKF absolute bundle-relative form
      `[title](/path/to/concept.md)`. Trace every claim to the source under a `# Citations` section,
      citing it by its `sources/library/<file>` path (its permanent home after step 8) — a stable,
-     greppable key that lets `skills/bundles/remove` find this bundle's backing sources later.
+     greppable key that lets `skills/bundle-remove` find this bundle's backing sources later.
 5. **Update the `index.md`** — add/adjust the list entry for each created or renamed concept in its
    own `<type>/index.md`. The root `index.md` lists the type folders, so it only needs touching when a
    type folder is new (create its `index.md` too) — that split is what keeps a large bundle
@@ -44,14 +46,19 @@ existing concepts rather than appending duplicates.
 6. **Append to the bundle `log.md`** — a `* **Creation**`/`* **Update**` bullet under a
    `## YYYY-MM-DD` heading (newest first) naming what changed.
 7. **Surface time-sensitive facts.** If the source carries anything with a shelf life — deadlines,
-   appointments, renewals, active-task status — record it in `memory/state.md` (date-anchored →
-   *Upcoming Deadlines*; open-ended → *Entries*). The durable facts stay in the bundle; this mirrors
-   only the time-sensitive slice into state.
+   appointments, renewals, recurring maintenance, active-task status — record it in `memory/state.md`
+   (date-anchored → *Upcoming Deadlines*, with its `Repeats` interval if it recurs; open-ended →
+   *Entries*), tagged with the bundle name. The durable facts stay in the bundle; this mirrors only
+   the time-sensitive slice into state.
 8. **Relocate the source** from `sources/inbox/` to `sources/library/` (it is now ingested and
    permanent). If a concept needs a local copy of the source to cite, place it under the bundle's
    `references/`.
 9. **Log it.** Append an entry to `memory/journal.md` naming the source, the bundle, and the concepts
    touched.
+
+When several sources are waiting and the harness supports sub-agents, independent sources can be
+ingested in parallel — one per sub-agent — as long as a single agent updates each bundle's `index.md`
+and `log.md` afterward, then checks the new concepts against their templates.
 
 ## Done when
 

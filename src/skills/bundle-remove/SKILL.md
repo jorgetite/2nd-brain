@@ -1,5 +1,5 @@
 ---
-name: remove
+name: bundle-remove
 description: Retire a knowledge bundle — confirm the deletion, optionally preserve a copy, delete bundles/<name>/, and deregister it from the catalog. Destructive and irreversible; human-initiated. Use to permanently remove a bundle the assistant no longer needs.
 ---
 
@@ -28,7 +28,7 @@ Retire a bundle the assistant no longer needs. This is **destructive and irrever
 6. **Deregister.** Remove the bundle's row from `bundles/index.md`. If it was the last one, restore
    the `_(no bundles yet)_` placeholder.
 7. **Clear references.** Remove any lingering references to the bundle from `memory/state.md` (e.g.
-   time-sensitive facts `skills/bundles/ingest` mirrored from it).
+   time-sensitive facts `skills/bundle-ingest` mirrored from it).
 8. **Log it.** Append an entry to `memory/journal.md` naming the bundle removed and any sources archived.
 
 ## Done when

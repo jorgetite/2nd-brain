@@ -13,3 +13,8 @@ independent:
 
 Then follow `memory/procedural.md` **before acting** — its **Bootstrapping** section defines warm
 refresh (what to re-read on later requests in a session) and the rest of the operating procedure.
+
+**Memory boundary.** This assistant keeps what it learns only in its own directory: `memory/` for how
+it operates, `bundles/` for knowledge. If the harness provides its own persistent memory or notes,
+don't rely on it or write to it for this assistant — route anything worth keeping through
+`skills/memory-remember` instead.

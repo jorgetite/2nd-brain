@@ -48,7 +48,7 @@ The LLM Wiki is the **knowledge that compounds**; the Continual Harness is the *
 
 - A single assistant owns its knowledge as **one or more OKF bundles** under `bundles/`, one per domain. The `bundles/index.md` catalog lists them and is loaded at bootstrap.
 - Each bundle is a self-contained OKF markdown tree — its own `index.md`, `log.md`, per-type `templates/`, and `type`-tagged concept files — so it stays portable and can be shared or moved independently.
-- Adding a bundle is human-initiated: `skills/bundles/create` generates a new empty bundle, or `skills/bundles/import` adopts an existing OKF bundle authored elsewhere; `skills/bundles/remove` retires one (destructive, confirms first — archiving the bundle's unshared backing sources to `sources/archive/`). `ingest`/`query`/`lint` operate on the appropriate bundle chosen from the catalog.
+- Adding a bundle is human-initiated: `skills/bundle-create` generates a new empty bundle, or `skills/bundle-import` adopts an existing OKF bundle authored elsewhere; `skills/bundle-remove` retires one (destructive, confirms first — archiving the bundle's unshared backing sources to `sources/archive/`). `bundle-ingest`/`bundle-query`/`bundle-lint` operate on the appropriate bundle chosen from the catalog.
 
 ### Project Structure
 
@@ -58,7 +58,7 @@ The LLM Wiki is the **knowledge that compounds**; the Continual Harness is the *
 ├── src/                  # TRACKED — the framework source (the only versioned resources)
 │   ├── AGENTS.md         #   entrypoint: bootstrap, then act
 │   ├── memory/           #   blank 4-layer contracts: core, procedural, state, journal
-│   └── skills/           #   SKILL.md playbooks: core/, bundles/
+│   └── skills/           #   SKILL.md playbooks: brain-*, memory-*, bundle-*, artifact-*
 ├── assistant/            # GITIGNORED — a working instance installed from src/. Gains sources/,
 │                         #   bundles/, and artifacts/ at install/runtime, and evolves memory & skills.
 ├── docs/                 # concepts, memory model, bundles

@@ -5,13 +5,13 @@ stream: every query, action, error, or event leaves a trace here.
 
 It is the assistant's operational activity log; each bundle keeps its own OKF `log.md` for its
 knowledge-change history.
-`skills/core/reflect` consolidates durable learnings from here into the upper memory layers (per the
+`skills/memory-reflect` consolidates durable learnings from here into the upper memory layers (per the
 Recording table in `memory/procedural.md`), then **collapses** each consolidated block into one
 `reflect:` summary line. That summary line is the **watermark** — the next reflection processes only
 the entries after it, so history is kept in compressed form and the file stays bounded.
 
 For normal reads, never load the whole file — slice the most recent entries (see Bootstrapping in
-`memory/procedural.md`). `reflect` is the exception: it reads every entry since the last `reflect:`
+`memory/procedural.md`). `memory-reflect` is the exception: it reads every entry since the last `reflect:`
 watermark.
 
 ## Entries

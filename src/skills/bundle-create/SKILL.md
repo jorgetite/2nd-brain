@@ -1,24 +1,30 @@
 ---
-name: create
-description: Create a new OKF knowledge bundle under bundles/ — its index.md, log.md, and per-type concept templates — then register it in the bundles catalog. Use to stand up a knowledge base for a fresh domain.
+name: bundle-create
+description: Create a new OKF knowledge bundle for an area of the human's life or work — its index.md, log.md, and per-type concept templates — and register it in the catalog with clear boundaries. Use when the human wants to start tracking a new domain.
 ---
 
 # Create
 
 Stand up a new [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
 bundle: a directory tree of markdown concepts. This skill sets up the empty, conformant shell;
-`skills/bundles/ingest` fills it with concepts as sources arrive.
+`skills/bundle-ingest` fills it with concepts as sources arrive.
 
 Creating a bundle is **human-initiated** — confirm the domain with the human before adding one.
 
 ## Steps
 
-1. **Name the bundle.** Pick a kebab-case `<name>` and a one-line description of the domain it owns.
+1. **Name and bound the bundle.** Pick a kebab-case `<name>` and a one-line description of the domain
+   it owns. Read `bundles/index.md` and settle the boundary with every existing bundle whose scope
+   overlaps — which kinds of material go where. Bundles never link to each other, so if the new
+   domain would constantly need to reference an existing one, propose extending that bundle instead.
 2. **Decide the concept types** this domain needs — the key kinds of thing it will track (e.g. a
    recipes bundle: `recipe`, `ingredient`; a contacts bundle: `person`, `company`). For each, ask
    whether it has a required page format or rules (extra sections, a structured record, field
    conventions) — those become the template's shape and its `# Authoring` section. Ask; do not
-   invent — *Truth over invention*.
+   invent — *Truth over invention*. A type name becomes a folder, so `index`, `log`, `templates`,
+   and `references` are unavailable. For a running record (workouts, measurements, maintenance
+   history), prefer one concept per period or per plan over one per entry, so the folder stays
+   browsable.
 3. **Create the bundle directory** `bundles/<name>/` with:
    - **`index.md`** — the OKF listing. Give it frontmatter declaring the format version, then a row
      per type folder (step 2's types) — the root index is a table of contents **by type**, not a flat
@@ -44,7 +50,7 @@ Creating a bundle is **human-initiated** — confirm the domain with the human b
      * **Initialization**: Created the bundle.
      ```
    - **`<type>/index.md`** — one folder per concept type from step 2, each with its own OKF listing.
-     Concepts of that type live here (see `skills/bundles/ingest`), so the bundle's layout mirrors its
+     Concepts of that type live here (see `skills/bundle-ingest`), so the bundle's layout mirrors its
      `templates/` one-to-one. Start each empty:
 
      ```markdown
@@ -91,15 +97,17 @@ Creating a bundle is **human-initiated** — confirm the domain with the human b
 
      Shape each template to its type: add, rename, or drop sections and frontmatter fields to match
      what step 2 established. The block above is the starting point, not a ceiling.
-4. **Register the bundle.** Add a row to `bundles/index.md` so `query` and `ingest` can find it:
-   `* [<name>](<name>/) - <description>`. Make the description convey the bundle's **scope** — the
-   kinds of thing it covers (its concept types / key topics) — not just a bare label, so a query can
-   tell from the catalog alone whether this bundle is relevant. Remove the `_(no bundles yet)_`
-   placeholder if present.
+4. **Register the bundle.** Add a row to `bundles/index.md` so `bundle-query` and `bundle-ingest` can find it:
+   `* [<name>](<name>/) - <scope>. Not here: <material> → <other bundle>`. The scope names the kinds
+   of thing it covers (its concept types / key topics), not just a bare label, so a query can tell
+   from the catalog alone whether this bundle is relevant; the *Not here* clause records the step 1
+   boundaries (omit it if there is no overlap). Add the reciprocal *Not here* clause to the
+   overlapping bundle's row too. Remove the `_(no bundles yet)_` placeholder if present.
 5. **Log it.** Append an entry to `memory/journal.md`.
 
 ## Done when
 
 `bundles/<name>/` holds a conformant `index.md` (with `okf_version`), a `log.md` with an
 Initialization entry, and at least one type — its `templates/<type>.md` paired with a `<type>/index.md`
-the root index links to; and the bundle is listed in `bundles/index.md`.
+the root index links to; and the bundle is listed in `bundles/index.md` with its scope and any
+boundaries.
