@@ -56,6 +56,7 @@ To read a journal date range without loading the whole file: `grep -n "^- \[" me
 | Trigger / intent | Skill |
 | --- | --- |
 | Personalize a fresh assistant | `skills/brain-init/SKILL.md` |
+| Upgrade the assistant from a newer framework | `skills/brain-upgrade/SKILL.md` |
 | Remember, remind, correct, or forget something | `skills/memory-remember/SKILL.md` |
 | Consolidate / self-improve | `skills/memory-reflect/SKILL.md` |
 | Create a new knowledge bundle | `skills/bundle-create/SKILL.md` |

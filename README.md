@@ -115,6 +115,7 @@ Available skills:
 | Skill | Run | What it does |
 |---|---|---|
 | `brain-init` | `run brain-init` | One-time setup — set the assistant's name, purpose, and the areas it covers, and optionally stand up a bundle per area. |
+| `brain-upgrade` | `run brain-upgrade` | Merge a newer framework version into this assistant, keeping what it has learned; resolves conflicts and fills anything new. |
 | `memory-remember` | `run memory-remember <fact>` | Keep, correct, or forget a fact — filed by kind: a bundle, state, or preferences — asking when unclear. |
 | `bundle-create` | `run bundle-create <name>` | Create a new OKF knowledge bundle for a domain. |
 | `bundle-import` | `run bundle-import <path>` | Adopt an existing OKF bundle authored elsewhere — verify it and register it. |
@@ -124,6 +125,35 @@ Available skills:
 | `bundle-lint` | `run bundle-lint` | Audit bundles for OKF conformance, broken links, leaked secrets, contradictions, and stale or aging facts; fixes the mechanical issues and proposes resolutions for the rest. |
 | `memory-reflect` | `run memory-reflect` | Consolidate recent activity into durable memory and prune stale state (self-improvement). |
 | `artifact-export` | `run artifact-export <what>` | Produce a deliverable (summary, report, slide outline, copied source) into `artifacts/` — not filed into a bundle. |
+
+## Upgrading Your Assistant
+
+An installed assistant keeps an untouched copy of the framework it came from on its `framework` git
+branch. To take a newer framework without losing what the assistant has learned, pull this repo, then:
+
+```
+sh ./install.sh --upgrade ~/brain
+```
+
+It commits the new framework snapshot to that branch and merges it into the assistant: files the
+assistant never changed update cleanly, its own edits and skills survive, and your bundles and sources
+are never touched. Then run `brain-upgrade` in the assistant — it resolves any conflicts (your memory
+content always wins), fills new setup fields, and verifies. Upgrades change code, not data: if a
+framework change alters a format your bundles use, `brain-upgrade` tells you what would need
+converting.
+
+A few things to know:
+
+- **Commit first.** The upgrade refuses while the assistant has uncommitted changes to tracked files
+  (new files in `sources/inbox/` are fine). The assistant normally commits its own edits; if not,
+  commit in the assistant's directory and rerun.
+- **Read how it ends.** The script reports one of three outcomes: a clean merge (run `brain-upgrade`
+  anyway to fill new fields and verify), *already up to date* (nothing to do), or a list of conflicted
+  files (run `brain-upgrade` to resolve them).
+- **Older assistants work too.** One installed before the `framework` branch existed gets it created
+  automatically from its original install commit.
+- **Expect a `core.md` conflict** whenever the framework adds an identity field: your filled-in lines
+  sit next to the new one. `brain-upgrade` keeps yours and adds the new field for `brain-init` to fill.
 
 ## Customizing Your Assistant
 
@@ -155,7 +185,7 @@ The framework is markdown conventions only, so there is no build step or runtime
 - **Four-layer memory.** `core` (identity & principles) · `procedural` (layout, routes, conventions) · `state` (short-lived state) · `journal` (append-only activity log). `memory-reflect` consolidates upward and is the self-improvement loop. See [docs/memory.md](docs/memory.md).
 - **Skills** are self-contained `SKILL.md` procedures under `skills/<name>/`, routed from `memory/procedural.md`. They follow the [Agent Skills spec](https://agentskills.io/specification).
 - **Knowledge vs. memory.** `bundles/` hold durable, user-facing knowledge (OKF concepts) curated from `sources/`; `memory/` is the assistant's own operating state. The two are kept separate.
-- **Source vs. instance (dev/install split).** `src/` is the only version-controlled tree — `AGENTS.md`, the blank `memory/` contracts, and `skills/`. A working instance is installed from it by `install.sh` into any target path (the repo gitignores `assistant/` for the common in-repo case); it evolves its own memory, skills, and bundles at runtime without touching `src/`.
+- **Source vs. instance (dev/install split).** `src/` is the only version-controlled tree — `AGENTS.md`, the blank `memory/` contracts, and `skills/`. A working instance is installed from it by `install.sh` into any target path (the repo gitignores `assistant/` for the common in-repo case); it evolves its own memory, skills, and bundles at runtime without touching `src/`, and takes later framework versions through `install.sh --upgrade`, which merges them in without losing its learned edits.
 
 See also [docs/concepts.md](docs/concepts.md) for the two foundational ideas, and `CLAUDE.md` for guidance on working on the framework itself.
 

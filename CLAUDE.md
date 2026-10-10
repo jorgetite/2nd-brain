@@ -54,7 +54,7 @@ The LLM Wiki is the **knowledge that compounds**; the Continual Harness is the *
 
 ```
 .
-├── install.sh            # TRACKED — installer: install an assistant from src/ into a target path
+├── install.sh            # TRACKED — installer: install an assistant from src/, or --upgrade one
 ├── src/                  # TRACKED — the framework source (the only versioned resources)
 │   ├── AGENTS.md         #   entrypoint: bootstrap, then act
 │   ├── memory/           #   blank 4-layer contracts: core, procedural, state, journal
@@ -66,9 +66,10 @@ The LLM Wiki is the **knowledge that compounds**; the Continual Harness is the *
 └── CLAUDE.md
 ```
 
-Install a working instance with `sh ./install.sh <target>` (e.g. `sh ./install.sh assistant`). Only
-`src/` (and `install.sh`) are version-controlled; an installed instance is regenerable and not
-tracked.
+Install a working instance with `sh ./install.sh <target>` (e.g. `sh ./install.sh assistant`), and
+bring an existing one up to date with `sh ./install.sh --upgrade <target>`, which merges a fresh
+framework snapshot (its `framework` branch) into the instance. Only `src/` (and `install.sh`) are
+version-controlled here; an installed instance is its own git repository and not tracked by this one.
 
 
 ## MUST FOLLOW PRINCIPLES
