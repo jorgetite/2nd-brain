@@ -1,113 +1,60 @@
 ---
 name: bundle-create
-description: Create a new OKF knowledge bundle for an area of the human's life or work — its index.md, log.md, and per-type concept templates — and register it in the catalog with clear boundaries. Use when the human wants to start tracking a new domain.
+description: Create a new OKF knowledge bundle for an area of the human's life or work — or add a concept type to an existing bundle — with its index, log, per-type templates, and a catalog row stating its scope and boundaries. Use when the human wants to start tracking a new domain, or a new kind of thing within one.
 ---
 
-# Create
+# Bundle create
 
-Stand up a new [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
-bundle: a directory tree of markdown concepts. This skill sets up the empty, conformant shell;
-`skills/bundle-ingest` fills it with concepts as sources arrive.
+Stand up an empty, conformant [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
+bundle, or extend one with a new concept type; `skills/bundle-ingest` fills it with concepts later.
+Creating a bundle is human-initiated, so confirm before adding one — a plan the human already
+approved (for example in `skills/brain-init`) is that confirmation: build from it without re-asking
+what it settled.
 
-Creating a bundle is **human-initiated** — confirm the domain with the human before adding one.
+## Design
 
-## Steps
+Settle these with the human by proposing a draft for them to correct, not by asking open questions:
 
-1. **Name and bound the bundle.** Pick a kebab-case `<name>` and a one-line description of the domain
-   it owns. Read `bundles/index.md` and settle the boundary with every existing bundle whose scope
-   overlaps — which kinds of material go where. Bundles never link to each other, so if the new
-   domain would constantly need to reference an existing one, propose extending that bundle instead.
-2. **Decide the concept types** this domain needs — the key kinds of thing it will track (e.g. a
-   recipes bundle: `recipe`, `ingredient`; a contacts bundle: `person`, `company`). For each, ask
-   whether it has a required page format or rules (extra sections, a structured record, field
-   conventions) — those become the template's shape and its `# Authoring` section. Ask; do not
-   invent — *Truth over invention*. A type name becomes a folder, so `index`, `log`, `templates`,
-   and `references` are unavailable. For a running record (workouts, measurements, maintenance
-   history), prefer one concept per period or per plan over one per entry, so the folder stays
-   browsable.
-3. **Create the bundle directory** `bundles/<name>/` with:
-   - **`index.md`** — the OKF listing. Give it frontmatter declaring the format version, then a row
-     per type folder (step 2's types) — the root index is a table of contents **by type**, not a flat
-     list of concepts:
+- **Name and scope** — a kebab-case name and one line on what the bundle covers.
+- **Boundaries** — read `bundles/index.md` and, for each bundle whose scope overlaps, agree which
+  material goes where. Bundles never link to each other, so if the new domain would constantly
+  reference an existing one, propose extending that bundle instead.
+- **Concept types** — the kinds of thing it tracks, each with a draft template: the frontmatter fields
+  and content headings that suit it (a `camera`: mount, sensor, serial, firmware, purchase; a
+  `maintenance-task`: interval, last done, procedure) and any rules for its `# Authoring` section.
+  Proposing a format is design, not invention — facts about the human's things still come only from
+  sources or the human. A type name becomes a folder, so `index`, `log`, `templates`, and `references`
+  are unavailable. For a running record (workouts, measurements, maintenance history), prefer one
+  concept per period or plan over one per entry, so the folder stays browsable.
 
-     ```markdown
-     ---
-     okf_version: "0.1"
-     title: <name>
-     description: <one-line domain description>
-     ---
+## Build
 
-     # <name>
+Write the files in one batch — none depends on another — from the skeletons in `assets/`:
 
-     * [<type>](/<type>/) - <what this type holds>
-     ```
-   - **`log.md`** — the OKF change history (newest-first, ISO dates):
+- `bundles/<name>/index.md` from `assets/bundle-index.md` — declares `okf_version` and lists one row
+  per type folder (a table of contents by type, not by concept);
+- `bundles/<name>/log.md` from `assets/bundle-log.md`, with an Initialization entry dated today;
+- per type, `<type>/index.md` from `assets/type-index.md` and `templates/<type>.md` from
+  `assets/concept-template.md`, shaped to the agreed design. The skeleton is a starting point, not a
+  ceiling; the finished template is binding for its type (Concept templates convention,
+  `memory/procedural.md`).
 
-     ```markdown
-     # <name> — Update Log
+Register the bundle with a row in `bundles/index.md`:
+`* [<name>](<name>/) - <scope>. Not here: <material> → <other bundle>`. Name its concept types or key
+topics so a query can judge relevance from the catalog alone; omit *Not here* when nothing overlaps;
+add the reciprocal clause to the other bundle's row; remove `_(no bundles yet)_` if present. Log the
+creation in `memory/journal.md`.
 
-     ## YYYY-MM-DD
-     * **Initialization**: Created the bundle.
-     ```
-   - **`<type>/index.md`** — one folder per concept type from step 2, each with its own OKF listing.
-     Concepts of that type live here (see `skills/bundle-ingest`), so the bundle's layout mirrors its
-     `templates/` one-to-one. Start each empty:
+## Adding a type to an existing bundle
 
-     ```markdown
-     ---
-     title: <type>
-     description: <what this type holds>
-     ---
-
-     # <type>
-
-     _(no concepts yet)_
-     ```
-   - **`templates/<type>.md`** — one skeleton per concept type from step 2. A template is the
-     **binding format** for its type: its frontmatter keys and its heading set and order are what a
-     concept of that type looks like, with each `{{placeholder}}` filled at ingest. A trailing
-     `# Authoring` section carries the type's rules — obeyed when filling, then deleted, so it never
-     appears in a concept page.
-
-     ```markdown
-     ---
-     type: <type>
-     title: {{title}}
-     description: {{description}}
-     resource: {{resource-uri-or-omit}}
-     tags: []
-     timestamp: {{YYYY-MM-DD}}
-     ---
-
-     {{summary}}
-
-     # Schema
-     {{structured description — omit the section if not applicable}}
-
-     # Examples
-     {{examples — omit if not applicable}}
-
-     # Citations
-     {{[1] [Source](path) — filled at ingest}}
-
-     # Authoring
-     _Rules for filling this template. Not part of a concept page — delete this section when filling._
-     {{per-type rules, or omit the section if the skeleton alone is enough}}
-     ```
-
-     Shape each template to its type: add, rename, or drop sections and frontmatter fields to match
-     what step 2 established. The block above is the starting point, not a ceiling.
-4. **Register the bundle.** Add a row to `bundles/index.md` so `bundle-query` and `bundle-ingest` can find it:
-   `* [<name>](<name>/) - <scope>. Not here: <material> → <other bundle>`. The scope names the kinds
-   of thing it covers (its concept types / key topics), not just a bare label, so a query can tell
-   from the catalog alone whether this bundle is relevant; the *Not here* clause records the step 1
-   boundaries (omit it if there is no overlap). Add the reciprocal *Not here* clause to the
-   overlapping bundle's row too. Remove the `_(no bundles yet)_` placeholder if present.
-5. **Log it.** Append an entry to `memory/journal.md`.
+When the human or `skills/bundle-ingest` needs a new type, agree its template as above, then add
+`templates/<type>.md` and `<type>/index.md`, a row in the bundle's root `index.md`, an **Update** entry
+in its `log.md`, and widen the bundle's catalog scope if the type extends it. An imported bundle keeps
+its own layout — follow it.
 
 ## Done when
 
-`bundles/<name>/` holds a conformant `index.md` (with `okf_version`), a `log.md` with an
-Initialization entry, and at least one type — its `templates/<type>.md` paired with a `<type>/index.md`
-the root index links to; and the bundle is listed in `bundles/index.md` with its scope and any
-boundaries.
+The bundle (or new type) has a conformant root `index.md` declaring `okf_version`, a `log.md` entry,
+and for every type a `templates/<type>.md` paired with a `<type>/index.md` that the root index links
+to — no type named `index`, `log`, `templates`, or `references`; and `bundles/index.md` lists the
+bundle with its scope and reciprocal boundaries.

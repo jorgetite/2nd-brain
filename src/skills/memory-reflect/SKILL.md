@@ -1,75 +1,66 @@
 ---
 name: memory-reflect
-description: Consolidate the journal into durable memory, skills, and bundles, prune or roll forward stale state — the assistant's self-improvement loop. Use at session end, after a batch of new journal entries, or when the human asks the assistant to review and learn from recent work; not after every action.
+description: The assistant's self-improvement loop — consolidate the journal into durable knowledge, preferences, and sharper skills; learn from corrections and errors; prune or roll forward stale state; compact the journal. Use when entries have built up since the last reflection, when a deadline has passed, at the end of a working session, or when the human asks the assistant to review and learn from recent work.
 ---
 
 # Reflect
 
-The capability-compounding loop (Continual Harness). It reads recent activity, moves the durable
-learnings to their real home, and trims the stream — adapting the assistant, not any model weights.
+The capability-compounding loop (Continual Harness): read recent activity, move what's durable to its
+real home, sharpen the skills that caused friction, and compact the stream. It adapts the assistant —
+its memory and skills — not any model weights.
 
 ## Procedure
 
-This skill owns its own read; do not use the cheap session-start read from Bootstrapping.
+Order matters: the watermark bounds what you read, and only what you consolidated may be collapsed.
 
-1. **Find the watermark.** The last consolidation left a `reflect:` summary line in
-   `memory/journal.md`. Locate the most recent one:
+1. **Find the watermark** — the latest consolidation line:
 
    ```sh
-   grep -n "reflect:" memory/journal.md | tail -1
+   grep -n '^- \[[^]]*\] reflect: consolidated' memory/journal.md | tail -1
    ```
 
-   Everything **after** that line is the un-consolidated set. If there is no `reflect:` line yet,
-   the whole journal is un-consolidated. Read the **entire** un-consolidated set — not just the
-   recent tail — or you will silently drop older learnings.
+   Everything after it is un-consolidated; with no such line, every entry is. Read all of it, not just
+   the recent tail — skipping older entries silently drops their learnings.
 
-2. **Judge durability.** Promote a trace only if it is one of:
-   - a **fact or preference** that will matter beyond this session;
-   - a **workflow that has recurred** (~2–3 times) or is clearly reusable;
-   - a **correction** worth not repeating.
+2. **Promote what's durable**, routed by the Recording table in `memory/procedural.md`: facts about
+   the human's things and life to a bundle via `skills/bundle-ingest`; standing preferences to the
+   *Preferences* in `memory/core.md`; still-current time-bound items to `memory/state.md`, updating an
+   existing entry rather than adding a copy. One-offs and routine actions aren't promoted — they fall
+   away when the journal is compacted.
 
-   One-offs and routine actions are *not* promoted — they fall away when the journal is compacted.
+3. **Learn from friction.** Look for the human's corrections, errors, retries, and questions asked
+   more than once. When the same friction recurs, or the human corrected it explicitly, fix it where
+   it originates: reword the skill step that misled, propose a tighter `# Authoring` rule for a
+   template (templates are the human's design), or — for a workflow that has recurred two or three
+   times — write a new skill and route it in `memory/procedural.md`. Prefer editing an existing rule to
+   adding one, and delete rules that no longer earn their place; one session's stumble is not a
+   permanent rule. A new or changed principle for `memory/core.md` is proposed to the human, not
+   written.
 
-3. **Route each promotion by the Recording table** in `memory/procedural.md` (consult it; do not
-   copy it). In short: durable knowledge for the human → a bundle via `skills/bundle-ingest`; a new
-   repeatable workflow → a skill under `skills/` **and** a route in `procedural.md`; a lasting
-   principle → `memory/core.md`; still-current short-lived state → `memory/state.md` (date-anchored →
-   *Upcoming Deadlines*, open-ended → *Entries*). De-dup: if a state fact was already recorded directly,
-   update it in place rather than adding a copy.
+4. **Prune state.** For each deadline past its date or Entry past its `expires`, first record anything
+   of lasting significance — an outcome to a dated concept in a bundle, or a line in the journal — then
+   remove it. A deadline with a `Repeats` interval instead rolls forward by that interval (past today
+   if cycles were missed), keeping the table sorted. Re-evaluate `review` entries.
 
-4. **Prune state (promote, then drop).** In `memory/state.md`, for any deadline whose date has passed
-   or Entry past its `expires`: first record anything of lasting significance — the outcome to a dated
-   concept in a bundle, or a minor line in `memory/journal.md` — then remove it. A deadline with a
-   `Repeats` interval is not removed: roll its date forward by the interval (past today, if several
-   cycles were missed) and keep the table sorted. Re-evaluate `review` entries; drop items with no
-   lasting value.
+5. **Check, commit, compact.** Re-read each skill or memory file you changed alongside the files it
+   interacts with, looking for contradictions — a fresh-context review when the harness supports
+   sub-agents. Commit, which keeps the raw journal entries in history; then replace the consolidated
+   block with one line, the next watermark, and commit again:
 
-5. **Compact by collapsing.** Replace the un-consolidated block you just processed with a single
-   summary line — this both bounds the journal and becomes the next watermark:
+   `- [YYYY-MM-DD HH:MM:SS] reflect: consolidated N entries — <where promotions landed, what was pruned>`
 
-   `- [YYYY-MM-DD HH:MM:SS] reflect: consolidated N entries — <what was promoted/pruned>`
-
-   The summary obeys the journal's pointer-not-report budget: counts and where each promotion
-   landed, not the promoted content itself. Never collapse an entry you did not consolidate.
+   Counts and destinations, not content. Never collapse an entry you did not consolidate. If you
+   changed `core.md` or `procedural.md`, re-read them — your in-context copy is stale.
 
 ## Cadence
 
-Frequency shapes how well learning compounds:
+Too often promotes one-offs and churns slow-changing files; too rarely bloats the journal and lets
+state expire unpromoted. Reflect when a few dozen entries have built up since the watermark, when a
+deadline has passed, at the end of a working session, or when asked — not after every action. If the
+harness can schedule work, a weekly reflection keeps it regular.
 
-- **Too often** promotes one-offs as if durable and churns `core.md` / `procedural.md`, which are
-  meant to be slow-changing.
-- **Too rarely** lets the journal bloat, lets `state.md` entries expire before they can be promoted,
-  and makes the assistant re-derive what it already learned.
+## Done when
 
-Aim for the middle: run at **session end**, and/or once a **batch** of new entries has accumulated
-since the last `reflect:` line — earlier if a clear new pattern emerged or relevant `state` is about
-to expire. Do not run after every action.
-
-## Cautions
-
-- Promote only what is genuinely durable; churn in `core.md` and `procedural.md` is a smell.
-- Self-edits stay within this assistant — change only its own `memory/` and `skills/`. If the
-  assistant is a git repository, commit the self-edits with a message naming what was promoted, so a
-  bad promotion can be rolled back.
-- After editing `core.md` or `procedural.md`, reload them — your in-context copy is now stale (see the
-  force-reload rule in `memory/procedural.md` Bootstrapping).
+Every entry after the old watermark is consolidated and collapsed into one new `reflect:` line;
+durable items live at their homes; recurring friction has a fix, or a proposal in front of the
+human; `state.md` holds no expired entries; and the changes are committed.

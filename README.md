@@ -22,7 +22,7 @@ assistant/   (installed from src/)
 ├── skills/        # SKILL.md playbooks — brain-* · memory-* · bundle-* · artifact-*
 ├── sources/       # raw source pipeline — inbox → library/archive
 ├── bundles/       # OKF knowledge bundles (index.md catalogs them)
-└── artifacts/     # generated deliverables (exports)
+└── artifacts/     # generated deliverables (exports) — not versioned
 ```
 
 - **Memory** is layered like human memory; the `memory-reflect` skill consolidates activity upward into
@@ -100,7 +100,7 @@ Type your query `<query text>` to ask the assistant a question. The assistant wi
 
 ### Take Notes
 
-Type `remember <fact>` (or `run memory-remember <fact>`). The `memory-remember` skill files it to the right memory layer for you — a short-lived note in `state` by default, durable knowledge into a bundle, or a lasting preference into `core`.
+Type `remember <fact>` (or `run memory-remember <fact>`). The `memory-remember` skill files it by kind — durable facts about your things into a bundle, dated or short-lived items into `state`, preferences into `core` — asking when it's unclear. It also handles "remind me", corrections, and "forget that", and never stores a secret's value.
 
 ## Running Skills
 
@@ -115,13 +115,13 @@ Available skills:
 | Skill | Run | What it does |
 |---|---|---|
 | `brain-init` | `run brain-init` | One-time setup — set the assistant's name, purpose, and the areas it covers, and optionally stand up a bundle per area. |
-| `memory-remember` | `run memory-remember <fact>` | Save a fact to the right memory layer — a short-lived note by default, durable knowledge to a bundle, or a lasting preference to core. |
+| `memory-remember` | `run memory-remember <fact>` | Keep, correct, or forget a fact — filed by kind: a bundle, state, or preferences — asking when unclear. |
 | `bundle-create` | `run bundle-create <name>` | Create a new OKF knowledge bundle for a domain. |
 | `bundle-import` | `run bundle-import <path>` | Adopt an existing OKF bundle authored elsewhere — verify it and register it. |
 | `bundle-remove` | `run bundle-remove <name>` | Retire a bundle — confirms first, offers to preserve a copy, then deletes and deregisters it, archiving its unshared backing sources to `sources/archive/`. |
 | `bundle-ingest` | `run bundle-ingest` | Pull new material from `sources/inbox/` into the right bundle, then file the source into `sources/library/`. |
 | `bundle-query` | `run bundle-query <text>` | Answer a question from the bundles and save useful new findings back as concepts. |
-| `bundle-lint` | `run bundle-lint` | Audit a bundle for OKF conformance, contradictions, stale claims, orphans, and broken links. |
+| `bundle-lint` | `run bundle-lint` | Audit bundles for OKF conformance, broken links, leaked secrets, contradictions, and stale or aging facts; fixes the mechanical issues and proposes resolutions for the rest. |
 | `memory-reflect` | `run memory-reflect` | Consolidate recent activity into durable memory and prune stale state (self-improvement). |
 | `artifact-export` | `run artifact-export <what>` | Produce a deliverable (summary, report, slide outline, copied source) into `artifacts/` — not filed into a bundle. |
 

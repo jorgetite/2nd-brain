@@ -1,69 +1,69 @@
 ---
 name: bundle-lint
-description: Audit one bundle or the whole catalog for OKF conformance, contradictions, stale claims, orphans, broken links, misplaced material, and index/log/catalog drift; fix what's clear and report the rest. Use periodically, or when the knowledge seems inconsistent.
+description: Audit one bundle or the whole catalog for structural conformance, contradictions, stale or aging facts, leaked secrets, misplaced material, and index/log/catalog drift; fix what's mechanical and put the judgment calls to the human. Use periodically, after a large ingest, or when the knowledge seems inconsistent.
 ---
 
-# Lint
+# Bundle lint
 
-A bundle's bookkeeping pass. Keep it conformant and coherent so it stays trustworthy.
+A bookkeeping pass that keeps bundles conformant and trustworthy. Lint the bundle the human names,
+or every bundle in `bundles/index.md`; checks marked *(catalog)* always cover all bundles.
 
-## Checks
+## Mechanical checks — find by search, fix directly
 
-Lint one named bundle, or — unscoped — every bundle in `bundles/index.md`. The checks marked
-*(catalog)* are catalog-level and always run across all bundles, whatever the scope. For each
-bundle in scope, scan its concepts, `index.md`, and `log.md` for:
+Run these as searches over the files (grep, find) rather than reading every page:
 
-- **OKF conformance** — every non-reserved `.md` has parseable YAML frontmatter with a non-empty
-  `type:` (reserved `index.md`/`log.md` are exempt, as is everything under `templates/` — templates
-  are tooling, not concepts). The bundle-root `index.md` declares `okf_version`.
-- **Layout drift** — a concept not in the folder matching its `type:`. Concepts live at
-  `<type>/<name>.md`, mirroring `templates/<type>.md`. (Imported bundles keep their authored layout —
-  exempt them.)
-- **Index drift** — concepts missing from `index.md`, or list entries pointing at moved/deleted
-  concepts. Check **every directory's** `index.md`, not just the bundle root: each type folder should
-  have an `index.md`, list its own concepts, and be linked from its parent index.
-- **Log drift** — `log.md` missing recent changes, or not newest-first with `## YYYY-MM-DD` headings.
-- **Broken links** — `[title](/path/to/concept.md)` links to concepts that don't exist (decide:
-  create the concept, or fix the link — broken links are tolerated but worth resolving).
-- **Orphans** — concepts nothing links to and that the index doesn't surface.
-- **Contradictions** — concepts making incompatible claims; reconcile against their cited sources.
-- **Stale claims** — facts contradicted by a newer source in `sources/library/`.
-- **Untraced claims** — statements with no citation behind them: neither a `sources/library/<file>`
-  path nor a sourceless form (`human — YYYY-MM-DD`, or cross-links to the concepts it derives from).
-- **Template drift** — a concept whose frontmatter keys or heading set/order don't match its type's
-  `templates/<type>.md`.
-- **Missing template** — a `type:` in use with no `templates/<type>.md` to define its format.
-- **Leaked scaffolding** — an unfilled `{{placeholder}}` or an `# Authoring` section inside a concept;
-  both belong only to templates.
-- **Convention drift** — non-kebab-case filenames.
-- **Catalog drift** *(catalog)* — `bundles/index.md` missing a bundle, pointing at a removed one,
-  carrying a row description that no longer conveys the bundle's current scope (its concept types /
-  key topics), or a *Not here* boundary with no reciprocal clause on the other bundle's row — stale
-  rows mis-route `bundle-query` and `bundle-ingest`.
-- **Cross-bundle contradictions** *(catalog)* — for each `sources/library/<file>` cited by more than
-  one bundle (grep every bundle's `# Citations`, as `skills/bundle-remove` step 4 does), the claims
-  citing it must agree across those bundles; reconcile against the source.
-- **Misplaced material** — concepts that a catalog boundary assigns to another bundle, and links
-  that reach outside the bundle (bundles are self-contained). Report these; moving material between
-  bundles is the human's call.
+- **OKF conformance** — every non-reserved `.md` outside `templates/` has frontmatter with a non-empty
+  `type:`; the root `index.md` declares `okf_version`.
+- **Layout** — each concept sits at `<type>/<name>.md` matching its `type:` (imported bundles keep
+  their authored layout).
+- **Indexes** — every type folder has an `index.md` that lists exactly its concepts and is linked from
+  the root index.
+- **Log** — newest-first `## YYYY-MM-DD` headings, with recent changes present.
+- **Links** — `[title](/path/to/concept.md)` links that don't resolve, and links reaching outside the
+  bundle.
+- **Templates** — every `type:` in use has a template; each concept's frontmatter keys and heading set
+  and order match it; no `{{placeholder}}` or `# Authoring` is left in a concept.
+- **Filenames** — kebab-case.
+- **Secrets** — passwords, keys, tokens, private-key blocks, full card or account numbers.
+- **Catalog** *(catalog)* — every bundle listed and none missing; *Not here* boundaries reciprocal.
 
-## Fix or report
+Fix these directly: sync indexes and logs, fix obvious links, rename to kebab-case, add a `type:` where
+the intent is clear, strip leaked scaffolding, and restore missing or misordered template headings.
+Moving a concept means rewriting every `](/old/path.md)` link to it and both indexes — a bare move
+breaks its inbound links. Replace a leaked secret with a note of where it lives, and tell the human it
+remains in the git history.
 
-**Fix the unambiguous**: index/log sync, obvious broken links, filename casing, a missing `type:`
-where the intended type is clear, leaked `# Authoring` sections, and template drift that's pure
-structure (a missing or misordered heading). Relocating a concept means moving the file **and**
-rewriting every `](/old/path.md)` link pointing at it, plus both indexes — a bare move silently breaks
-its inbound links.
+## Judgment checks — read, then report
 
-**Report the judgment calls** — contradictions, stale claims, missing templates, misplaced material,
-unfilled `{{placeholders}}` — to the human rather than guessing; they need a fact or a decision.
+These need reading and a decision. Unless the human asks for a full pass, cover the concepts changed
+since the last lint (from the bundle's `log.md`, or the last `bundle-lint` journal entry) and those
+citing library sources added since:
 
-Bundles are independent, so when the harness supports sub-agents a whole-catalog lint can run one
-per bundle in parallel, followed by a single pass over the catalog itself. Log a summary of what was
-fixed and what needs a decision in `memory/journal.md`.
+- **Contradictions** — within a bundle, and *(catalog)* across bundles citing the same
+  `sources/library/<file>`; reconcile against the source.
+- **Stale claims** — facts a newer source contradicts.
+- **Aging facts** — versions, prices, ownership, or status on pages untouched for a long time (a
+  template's `# Authoring` may set the horizon); verify with a lookup when the harness allows,
+  otherwise list them for review.
+- **Untraced claims** — statements with no citation: a `sources/library/<file>` path,
+  `human — YYYY-MM-DD`, `<URL> — retrieved YYYY-MM-DD`, or cross-links to the concepts they derive
+  from.
+- **Misplaced material** — concepts that a catalog boundary assigns to another bundle.
+- **Scope drift** *(catalog)* — a catalog row that no longer describes the bundle's current types and
+  topics, which mis-routes `bundle-query` and `bundle-ingest`.
+- **Isolated concepts** — pages no other concept links to where a relation clearly exists.
+
+Put these to the human in one message, grouped by bundle and most consequential first, each with a
+proposed resolution so they can approve in a batch. Moving material between bundles is always the
+human's call.
+
+## Wrap up
+
+Re-run the mechanical checks to confirm the fixes held, commit them, and journal one line per bundle:
+what was fixed and what awaits a decision. When the harness supports sub-agents, a whole-catalog lint
+can give each bundle to one sub-agent, followed by a single pass over the catalog.
 
 ## Done when
 
-Every concept is OKF-conformant, sits in its type's folder, and matches its type's template; each
-bundle's `index.md`/`log.md` match its concepts; no dangling links remain unhandled; and open issues
-are surfaced.
+The mechanical checks come back clean, the fixes are committed, and every judgment call is in front of
+the human with a proposed resolution.

@@ -30,7 +30,8 @@ bundles/
 
 - **Concepts.** Every non-reserved `.md` is a *concept* and MUST carry a `type:` in its YAML
   frontmatter. Recommended fields: `title`, `description`, `resource`, `tags`, `timestamp` (ISO
-  8601). Conventional body sections: `# Schema`, `# Examples`, `# Citations`.
+  8601). Body sections are content headings named for what they hold, plus `# Examples` and
+  `# Citations` where they apply; each type's template fixes the exact set.
 - **Reserved files.** Only `index.md` (a markdown-list listing for progressive disclosure) and
   `log.md` (a newest-first change history under `## YYYY-MM-DD` headings) have defined meaning. OKF
   allows an `index.md` at **any directory level**, which is what lets a bundle group concepts into
@@ -98,7 +99,7 @@ by `bundle-query` reading all of them and attributing each fact to its bundle.
 | `bundle-remove` | retire a bundle — confirm, optionally preserve a copy, delete it, and deregister it (destructive, human-initiated) |
 | `bundle-ingest` | absorb a source from `sources/inbox/` into the right bundle as concepts written from its `templates/`; update its `index.md` and `log.md`; relocate the source to `library/` |
 | `bundle-query` | answer from the bundles and file valuable syntheses back as concepts |
-| `bundle-lint` | audit a bundle for OKF conformance, index/log drift, broken links, orphans, contradictions, and stale claims |
+| `bundle-lint` | audit bundles for OKF conformance, index/log/catalog drift, broken links, leaked secrets, contradictions, and stale or aging facts |
 
 Creating or removing a bundle is **human-initiated** — the assistant confirms the domain before adding
 one, and confirms (and offers to preserve a copy) before the destructive `bundle-remove`. The

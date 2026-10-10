@@ -1,67 +1,74 @@
 ---
 name: bundle-ingest
-description: Absorb a new raw source from sources/inbox into an OKF bundle — extract, file into concepts, cross-link, update the bundle index and log, surface any time-sensitive facts into state.md, and relocate the source to library/. Use when new material needs to enter a knowledge base.
+description: Absorb new material into the right bundle(s) — files from sources/inbox (notes, documents, PDFs, photos, receipts, manuals) or a fact handed off by memory-remember or memory-reflect — as template-conformant, cross-linked concepts, mirroring time-sensitive facts into state and filing the source in library/. Use when the human adds something to the inbox, shares material to keep, or asks to process the inbox.
 ---
 
-# Ingest
+# Bundle ingest
 
-Turn a raw source into durable, interlinked OKF concepts. Knowledge compounds: integrate into
-existing concepts rather than appending duplicates.
+Turn raw material into durable, interlinked OKF concepts. Knowledge compounds: integrate into
+existing concepts rather than adding duplicates. With no specific source named, process everything
+in `sources/inbox/`.
 
 ## Steps
 
-1. **Take a source** from `sources/inbox/`. Read it; do not edit it (*Sources are immutable*).
-   Ingest also accepts a **hand-off with no source file** — a fact from `skills/memory-remember` or a
-   learning promoted by `skills/memory-reflect`. For those, cite per the sourceless form in the
-   Source-citations convention (`memory/procedural.md`) and skip step 8.
-2. **Pick the target bundle(s).** Read `bundles/index.md` and choose the bundle whose scope owns this
-   material, honouring each row's *Not here* boundaries. If two bundles fit equally, ask the human. A
-   source that spans domains (a receipt covering a camera and a router) files each part into the
-   bundle owning it, and all cite the same `sources/library/<file>` (shared sources are expected;
-   `skills/bundle-remove` accounts for them). If none fits, create one first with
-   `skills/bundle-create`.
-3. **Decide concept types** by listing the target bundle's `templates/`. One source may touch several
-   concepts. If the material needs a type with no `templates/<type>.md`, **stop and ask** the human —
-   add the template (`skills/bundle-create` step 3 has the shape) or use an existing type. Never
-   invent a type or a page format on the fly — *Truth over invention*.
-4. **File the knowledge.** For each affected concept:
-   - New concept → copy `templates/<type>.md` and fill it. The template is **binding**: keep its
-     frontmatter keys and its heading set and order (drop a section only where the template says it
-     may be omitted); replace every `{{placeholder}}`; obey the `# Authoring` rules and then **delete
-     that section**. Set `timestamp` to today. Name the file kebab-case and place it in the folder
-     matching its type — `<type>/<name>.md`, mirroring the `templates/<type>.md` it came from. (An
-     **imported** bundle keeps whatever layout it was authored with; follow that instead of imposing
-     this one — its structure isn't ours to restructure.)
-   - Existing concept → integrate the new facts in place; reconcile, don't append blindly; bump its
-     `timestamp`. Bring the page up to its template while you're there if the template has since
-     gained sections or fields it lacks.
-   - Cross-link related concepts with the OKF absolute bundle-relative form
-     `[title](/path/to/concept.md)`. Trace every claim to the source under a `# Citations` section,
-     citing it by its `sources/library/<file>` path (its permanent home after step 8) — a stable,
-     greppable key that lets `skills/bundle-remove` find this bundle's backing sources later.
-5. **Update the `index.md`** — add/adjust the list entry for each created or renamed concept in its
-   own `<type>/index.md`. The root `index.md` lists the type folders, so it only needs touching when a
-   type folder is new (create its `index.md` too) — that split is what keeps a large bundle
-   progressively disclosed.
-6. **Append to the bundle `log.md`** — a `* **Creation**`/`* **Update**` bullet under a
-   `## YYYY-MM-DD` heading (newest first) naming what changed.
-7. **Surface time-sensitive facts.** If the source carries anything with a shelf life — deadlines,
-   appointments, renewals, recurring maintenance, active-task status — record it in `memory/state.md`
-   (date-anchored → *Upcoming Deadlines*, with its `Repeats` interval if it recurs; open-ended →
-   *Entries*), tagged with the bundle name. The durable facts stay in the bundle; this mirrors only
-   the time-sensitive slice into state.
-8. **Relocate the source** from `sources/inbox/` to `sources/library/` (it is now ingested and
-   permanent). If a concept needs a local copy of the source to cite, place it under the bundle's
-   `references/`.
-9. **Log it.** Append an entry to `memory/journal.md` naming the source, the bundle, and the concepts
+Order matters: citations point at a source's final path, and nothing leaves the inbox until its
+knowledge is filed.
+
+1. **Read the source** without editing it (*Sources are immutable*). Read documents, PDFs, and images
+   directly; for dense or scanned pages, crop or zoom when the harness allows, and mark what you
+   can't read rather than guessing. From a long source such as a manual, extract what's durable for
+   the human, not a transcript. If the same source is already in `sources/library/` (same name or
+   content), treat this as an update of it. A hand-off with no file — a fact from
+   `skills/memory-remember` or a learning from `skills/memory-reflect` — uses the sourceless citation
+   form (Source-citations convention, `memory/procedural.md`) and skips steps 2 and 8.
+2. **Name its library home** now — kebab-case, date-prefixed when useful, unique in
+   `sources/library/`. That path is what every concept will cite.
+3. **Route.** Choose the owning bundle from `bundles/index.md`, honouring each row's *Not here*
+   boundaries. A source spanning domains (a receipt for a camera and a router) gives each bundle its
+   own slice, all citing the same library path. Material that fits two bundles equally, or none,
+   is set aside as a question (step 9).
+4. **Find what exists.** In each target bundle, read the relevant type indexes and search for the
+   names, models, or serials the material mentions — batching reads that don't depend on each
+   other — so you update existing concepts instead of duplicating them. Material that needs a type
+   the bundle lacks is set aside as a question too.
+5. **File the knowledge.**
+   - New concept → fill `templates/<type>.md`. The template is **binding**: keep its frontmatter keys
+     and heading set and order (drop a section only where it says so), replace every
+     `{{placeholder}}`, obey the `# Authoring` rules and then delete that section. Set `timestamp` to
+     today and save as `<type>/<name>.md` in kebab-case. (An imported bundle keeps its authored
+     layout; follow it.)
+   - Existing concept → integrate in place, bump `timestamp`, and bring the page up to its template
+     if the template has gained sections. When the new material contradicts the page, keep the newer
+     fact, note the old value with its date where history matters (a firmware version, a weight),
+     and flag it if it's unclear which is right.
+   - Cross-link within the bundle with `[title](/path/to/concept.md)`, and cite every claim under
+     `# Citations` by the step 2 library path.
+   - Never copy a secret into a concept — passwords, keys, tokens, full card or account numbers.
+     Record where it lives instead (*Discretion*); the source keeps the original.
+6. **Update the index and log** — each new or renamed concept in its `<type>/index.md` (the root
+   `index.md` changes only for a new type folder), and a `* **Creation**`/`* **Update**` bullet under
+   today's `## YYYY-MM-DD` heading in the bundle's `log.md`, newest first.
+7. **Mirror time-sensitive facts** — deadlines, appointments, renewals, recurring maintenance (with its
+   `Repeats` interval), active-task status — into `memory/state.md`, tagged with the bundle. The
+   durable facts stay in the bundle.
+8. **Relocate** the source from `sources/inbox/` to its step 2 path once all of its material is filed;
+   a source with material still waiting on a question stays in the inbox. If a concept needs a local
+   copy of the source, place it under the bundle's `references/`.
+9. **Ask, then report.** Put every set-aside question to the human in one message, each with a
+   proposal — the bundle you'd choose, or a draft template via *Adding a type to an existing bundle*
+   in `skills/bundle-create`. Journal one line per source: the source, the bundles, the concepts
    touched.
 
-When several sources are waiting and the harness supports sub-agents, independent sources can be
-ingested in parallel — one per sub-agent — as long as a single agent updates each bundle's `index.md`
-and `log.md` afterward, then checks the new concepts against their templates.
+## Many sources
+
+When the inbox holds several sources and the harness supports sub-agents, route everything yourself
+first (steps 1–3), then hand each bundle's share to one sub-agent — one per bundle, so no two agents
+edit the same concepts. Before relocating any source, check the sub-agents' concepts against their
+templates with a fresh-context review; finish state, relocation, questions, and the journal yourself.
 
 ## Done when
 
-The source's knowledge lives in the bundle as conformant concepts — each matching its type's
-template, with no `{{placeholder}}` or `# Authoring` section left behind — the bundle `index.md` and
-`log.md` are in sync, any time-sensitive facts are in `state.md`, and the source sits in `library/`.
+Every source is either in `sources/library/` with its knowledge filed as conformant concepts (no
+`{{placeholder}}` or `# Authoring` left, no secret copied), or still in the inbox with its open
+question put to the human; each touched bundle's indexes and `log.md` are in sync; time-sensitive
+facts are in `state.md`; and the human has a per-source summary of what was filed where.

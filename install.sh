@@ -63,6 +63,9 @@ cat > "$target/.claude/settings.json" <<'SETTINGS'
 }
 SETTINGS
 
+# deliverables are disposable and may hold private data or large binaries: keep them out of history
+printf '/artifacts/\n' > "$target/.gitignore"
+
 # version the instance so the assistant's self-edits (memory/, skills/) can be rolled back
 if command -v git >/dev/null 2>&1; then
   git -C "$target" init -q

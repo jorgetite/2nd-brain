@@ -1,21 +1,40 @@
 ---
 name: memory-remember
-description: Keep something the human asks to have remembered — a note, a reminder, a recurring chore, a fact, or a preference — and file it where it belongs. Use when the human says remember/note/save/remind, or wants something kept for later.
+description: Keep, correct, or forget something the human tells the assistant — a reminder, a recurring chore, a fact about their things or life, or a preference — filing it where it belongs. Use when the human says remember, note, save, remind me, forget, or tells the assistant something has changed.
 ---
 
 # Remember
 
-The human-facing way to capture a fact. File it where it belongs, per the **Recording table** in
-`memory/procedural.md`, rather than dumping everything in one place:
+The human-facing way to capture a fact. File each one where it belongs (the Recording table in
+`memory/procedural.md`):
 
-- **Transient state** *(the default)* → `memory/state.md`. A specific future date (due date,
-  appointment, renewal) goes to *Upcoming Deadlines* as `| YYYY-MM-DD | <repeats or —> | [bundle]
-  <description> |`; give a recurring chore its interval (`every 3 months`, `yearly`). Anything
-  open-ended goes to *Entries* as `- [recorded: YYYY-MM-DD] [expires: YYYY-MM-DD | review] — <fact>`;
-  infer or ask for an expiry, and use `review` if unclear. State is pruned by reflect, so nothing rots.
-- **Durable knowledge for the human** → hand off to `skills/bundle-ingest` so it becomes a concept in
-  the right bundle.
-- **A lasting preference about how the assistant should behave** → `memory/core.md`.
+- **About the human's things, people, or history** — a serial number, a filter size, an allergy, a
+  kit's paint scheme — and still true a year from now: durable knowledge. Hand it to
+  `skills/bundle-ingest`, which files it into the right bundle, cited as `human — YYYY-MM-DD`.
+- **Tied to a date or a shelf life** — an appointment, a renewal, a chore, the status of something in
+  progress: `memory/state.md`, in the formats it defines — a date goes to *Upcoming Deadlines* (with a
+  `Repeats` interval for a recurring chore), open-ended context to *Entries* with an expiry or `review`.
+- **How the assistant should behave or present things** — units, time zone, reply style: the
+  *Preferences* section of `memory/core.md`.
 
-If the fact already lives somewhere, update it in place instead of re-adding it. Tell the human what
-you saved and where, and log it in `memory/journal.md`.
+When it isn't clear which kind a fact is, ask — a durable fact parked in state can be pruned. Resolve
+relative dates ("next Tuesday") to absolute ones in the human's time zone.
+
+**Secrets** — passwords, PINs, keys, card numbers — are never stored (*Discretion*). Record only where
+the secret lives (a password manager, a named vault), and tell the human why.
+
+**Reminders** surface only when the human next talks to the assistant. If the harness offers
+scheduling or a calendar, offer to set a real reminder as well — that is outward-facing, so confirm
+first.
+
+**Corrections and forgetting.** Find where the fact lives and update or remove it there; in a bundle,
+keep the old value with its date where history matters. Removed content survives in the git history —
+say so when it is sensitive.
+
+If the fact already lives somewhere, update it in place rather than adding a copy. Tell the human what
+you saved or changed and where, and log it in `memory/journal.md`.
+
+## Done when
+
+The fact lives in exactly one place matching its kind, no secret value was stored, and the human knows
+where it went.
