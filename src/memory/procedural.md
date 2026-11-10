@@ -73,7 +73,7 @@ Append every action, query, error, or event to `memory/journal.md` (newest last)
 
 `- [YYYY-MM-DD HH:MM:SS] <skill | actor | event>: <title> - <what happened>`
 
-A trace is a **pointer, not a report**: one sentence of what happened plus where the detail lives (the bundle's `log.md`, the concept, the git diff). Never restate detail already recorded at its home — the journal indexes activity; it doesn't hold content.
+A trace is a **pointer, not a report**: one sentence of what happened plus where the detail lives (the bundle's `log.md`, the concept). Never restate detail already recorded at its home — the journal indexes activity; it doesn't hold content.
 
 When the human corrects the assistant, log it as its own `correction:` trace — `skills/memory-reflect` learns from them.
 
@@ -99,7 +99,7 @@ Route what you learn to its home (the *One fact, one home* principle):
 
 - **Dates:** use the actual current date and time (check via shell if unsure). Frontmatter times (`generated.at`, `verified.at`, `stale_after`) are ISO 8601 datetimes with a UTC offset in the human's time zone (`2026-10-10T14:00:00-04:00`); log, journal, and state entries use `YYYY-MM-DD`. Convert relative dates to absolute ones.
 - **Secrets:** record only *where* a secret lives (e.g. a named vault, the host `.env`), never the value.
-- **Changes:** small, focused, well-described edits. When the assistant is a git repo (`install.sh` makes it one), commit after changing `memory/` or `skills/` so a bad self-edit can be rolled back; favour many small commits over sweeping rewrites.
+- **Changes:** small, focused, well-described edits; favour many small edits over sweeping rewrites. Nothing is versioned, so a change is final once made.
 - **OKF concepts (v0.2):** every non-reserved `.md` in a bundle MUST carry a `type:` in its YAML frontmatter; recommended too: `title`, `description`, `resource`, `tags`, plus `generated: {by, at}` (by = `<assistant-name>/<model id, or unknown>`), `sources`, and where they apply `verified: {by: human:<id>, at}` (only for content the human stated or confirmed), `status` (`draft` | `deprecated`; absent means stable), and `stale_after`. Write `generated` and `verified` as block mappings — an inline `{by, at}` holding a datetime breaks common YAML parsers. Use content headings named for what they hold, plus `# Examples` where it applies — the type's `templates/<type>.md` defines the binding set. `index.md` and `log.md` are exempt; index files carry no frontmatter except `okf_version` in the bundle root's.
 - **Concept templates:** `templates/<type>.md` is the binding format for its type — a concept keeps the template's frontmatter keys and heading set/order, fills every `{{placeholder}}`, and obeys then deletes the `# Authoring` section. No `{{` or `# Authoring` survives in a concept; no template, no new type.
 - **Concept placement:** a concept of type `X` lives at `<X>/<name>.md` with its own `<X>/index.md`, mirroring `templates/<X>.md`; the bundle's root `index.md` lists the type folders. Imported bundles keep their authored layout.

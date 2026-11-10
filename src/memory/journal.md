@@ -21,7 +21,7 @@ Format, one line per trace, appended at the end (greppable):
 `- [YYYY-MM-DD HH:MM:SS] <skill | actor | event>: <title> - <what happened>`
 
 A trace is a **pointer, not a report** — one sentence plus where the detail lives (the bundle's
-`log.md`, the concept, the git diff); detail recorded at its home is not restated here.
+`log.md`, the concept); detail recorded at its home is not restated here.
 
 ---
 

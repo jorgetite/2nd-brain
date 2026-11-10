@@ -42,10 +42,11 @@ Order matters: the watermark bounds what you read, and only what you consolidate
    remove it. A deadline with a `Repeats` interval instead rolls forward by that interval (past today
    if cycles were missed), keeping the table sorted. Re-evaluate `review` entries.
 
-5. **Check, commit, compact.** Re-read each skill or memory file you changed alongside the files it
+5. **Check, then compact.** Re-read each skill or memory file you changed alongside the files it
    interacts with, looking for contradictions — a fresh-context review when the harness supports
-   sub-agents. Commit, which keeps the raw journal entries in history; then replace the consolidated
-   block with one line, the next watermark, and commit again:
+   sub-agents. Compaction is permanent — the raw entries are not kept anywhere — so first make sure
+   everything durable in them has landed at its home. Then replace the consolidated block with one
+   line, the next watermark:
 
    `- [YYYY-MM-DD HH:MM:SS] reflect: consolidated N entries — <where promotions landed, what was pruned>`
 
@@ -63,4 +64,4 @@ harness can schedule work, a weekly reflection keeps it regular.
 
 Every entry after the old watermark is consolidated and collapsed into one new `reflect:` line;
 durable items live at their homes; recurring friction has a fix, or a proposal in front of the
-human; `state.md` holds no expired entries; and the changes are committed.
+human; and `state.md` holds no expired entries.

@@ -68,8 +68,9 @@ The LLM Wiki is the **knowledge that compounds**; the Continual Harness is the *
 
 Install a working instance with `sh ./install.sh <target>` (e.g. `sh ./install.sh assistant`), and
 bring an existing one up to date with `sh ./install.sh --upgrade <target>`, which merges a fresh
-framework snapshot (its `framework` branch) into the instance. Only `src/` (and `install.sh`) are
-version-controlled here; an installed instance is its own git repository and not tracked by this one.
+framework snapshot into the instance against its pristine `.framework/` copy. Only `src/` (and
+`install.sh`) are version-controlled here; an installed instance needs no git and is not tracked by
+this one.
 
 
 ## MUST FOLLOW PRINCIPLES

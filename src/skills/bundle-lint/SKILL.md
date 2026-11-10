@@ -34,8 +34,7 @@ Run these as searches over the files (grep, find) rather than reading every page
 Fix these directly: sync indexes and logs, fix obvious links, rename to kebab-case, add a `type:` where
 the intent is clear, strip leaked scaffolding, and restore missing or misordered template headings.
 Moving a concept means rewriting every `](/old/path.md)` link to it and both indexes — a bare move
-breaks its inbound links. Replace a leaked secret with a note of where it lives, and tell the human it
-remains in the git history.
+breaks its inbound links. Replace a leaked secret with a note of where it lives, and tell the human.
 
 ## Judgment checks — read, then report
 
@@ -62,11 +61,10 @@ human's call.
 
 ## Wrap up
 
-Re-run the mechanical checks to confirm the fixes held, commit them, and journal one line per bundle:
+Re-run the mechanical checks to confirm the fixes held, and journal one line per bundle:
 what was fixed and what awaits a decision. When the harness supports sub-agents, a whole-catalog lint
 can give each bundle to one sub-agent, followed by a single pass over the catalog.
 
 ## Done when
 
-The mechanical checks come back clean, the fixes are committed, and every judgment call is in front of
-the human with a proposed resolution.
+The mechanical checks come back clean, and every judgment call is in front of the human with a proposed resolution.

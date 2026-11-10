@@ -29,8 +29,7 @@ scheduling or a calendar, offer to set a real reminder as well — that is outwa
 first.
 
 **Corrections and forgetting.** Find where the fact lives and update or remove it there; in a bundle,
-keep the old value with its date where history matters. Removed content survives in the git history —
-say so when it is sensitive.
+keep the old value with its date where history matters.
 
 If the fact already lives somewhere, update it in place rather than adding a copy. Tell the human what
 you saved or changed and where, and log it in `memory/journal.md`.

@@ -22,7 +22,8 @@ assistant/   (installed from src/)
 ├── skills/        # SKILL.md playbooks — brain-* · memory-* · bundle-* · artifact-*
 ├── sources/       # raw source pipeline — inbox → library/archive
 ├── bundles/       # OKF knowledge bundles (index.md catalogs them)
-└── artifacts/     # generated deliverables (exports) — not versioned
+├── artifacts/     # generated deliverables (exports)
+└── .framework/    # untouched copy of the installed framework — the base for upgrades
 ```
 
 - **Memory** is layered like human memory; the `memory-reflect` skill consolidates activity upward into
@@ -37,8 +38,7 @@ assistant/   (installed from src/)
 
 1. Clone this repo.
 2. **Install** the working assistant from the source: `sh ./install.sh ~/brain` (any path, relative
-   or absolute). The installed directory is its own git repository, so the assistant's self-edits can
-   be rolled back.
+   or absolute). The installed assistant needs no git.
 3. Point your harness to the installed directory and run the `brain-init` skill to set its name,
    purpose, and the areas of life it covers — and optionally stand up one bundle per area.
 4. Create more bundles with `bundle-create` as needed, drop material into `sources/inbox/` and run
@@ -128,30 +128,27 @@ Available skills:
 
 ## Upgrading Your Assistant
 
-An installed assistant keeps an untouched copy of the framework it came from on its `framework` git
-branch. To take a newer framework without losing what the assistant has learned, pull this repo, then:
+An installed assistant keeps an untouched copy of the framework it came from in `.framework/`. To take a newer framework without losing what the assistant has learned, pull this repo, then:
 
 ```
 sh ./install.sh --upgrade ~/brain
 ```
 
-It commits the new framework snapshot to that branch and merges it into the assistant: files the
-assistant never changed update cleanly, its own edits and skills survive, and your bundles and sources
-are never touched. Then run `brain-upgrade` in the assistant — it resolves any conflicts (your memory
-content always wins), fills new setup fields, and verifies. Upgrades change code, not data: if a
+It compares each framework file against that copy: files the assistant never changed update cleanly,
+files only the assistant changed are kept, and your bundles and sources are never touched. Then run
+`brain-upgrade` in the assistant — it merges files both sides changed (your memory content always
+wins), fills new setup fields, and verifies. Upgrades change code, not data: if a
 framework change alters a format your bundles use, `brain-upgrade` tells you what would need
 converting.
 
 A few things to know:
 
-- **Commit first.** The upgrade refuses while the assistant has uncommitted changes to tracked files
-  (new files in `sources/inbox/` are fine). The assistant normally commits its own edits; if not,
-  commit in the assistant's directory and rerun.
-- **Read how it ends.** The script reports one of three outcomes: a clean merge (run `brain-upgrade`
-  anyway to fill new fields and verify), *already up to date* (nothing to do), or a list of conflicted
-  files (run `brain-upgrade` to resolve them).
-- **Older assistants work too.** One installed before the `framework` branch existed gets it created
-  automatically from its original install commit.
+- **Read how it ends.** The script reports one of three outcomes: a clean upgrade (run `brain-upgrade`
+  anyway to fill new fields and verify), *already up to date* (nothing to do), or a list of files both
+  sides changed (run `brain-upgrade` to merge them). Until that merge finishes, the new framework waits
+  in `.framework.new/` and further upgrades refuse to run.
+- **Assistants installed as git repositories** have no `.framework/` yet; create it once from their
+  `framework` branch: `mkdir ~/brain/.framework && git -C ~/brain archive framework | tar -x -C ~/brain/.framework`.
 - **Expect a `core.md` conflict** whenever the framework adds an identity field: your filled-in lines
   sit next to the new one. `brain-upgrade` keeps yours and adds the new field for `brain-init` to fill.
 

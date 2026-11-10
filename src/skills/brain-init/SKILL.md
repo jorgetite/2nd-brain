@@ -31,10 +31,10 @@ types so it doesn't re-ask them. Skip any area the human isn't ready to start. W
 supports sub-agents, independent bundles can be built in parallel; write the catalog rows yourself
 so boundaries stay reciprocal.
 
-Then re-read `memory/core.md` (your in-context copy is stale), log the setup in
-`memory/journal.md`, and commit.
+Then re-read `memory/core.md` (your in-context copy is stale), and log the setup in
+`memory/journal.md`.
 
 ## Done when
 
 `grep "{{" memory/core.md` returns nothing, preferences are recorded, every approved bundle is in
-`bundles/index.md` with reciprocal boundaries, and the setup is journaled and committed.
+`bundles/index.md` with reciprocal boundaries, and the setup is journaled.

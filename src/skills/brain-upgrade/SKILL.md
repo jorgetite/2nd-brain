@@ -5,20 +5,23 @@ description: Bring this assistant up to a newer version of the 2nd-brain framewo
 
 # Brain upgrade
 
-This assistant is a git repository whose `framework` branch holds the pristine framework it was
-installed from. An upgrade commits a new pristine snapshot there and merges it into the assistant's
-own branch, so the framework's changes land on top of what the assistant has learned instead of
-replacing it. Bundles and sources are never part of a framework snapshot, so an upgrade can't touch
-them.
+This assistant keeps an untouched copy of the framework it was installed from in `.framework/`. An
+upgrade compares each framework file three ways — that copy (the *base*), the live file (*ours*), and
+the new framework (*theirs*, staged in `.framework.new/`) — so the framework's changes land on top of
+what the assistant has learned instead of replacing it. Bundles and sources are never part of a
+framework snapshot, so an upgrade can't touch them.
 
 ## Steps
 
-1. **Merge.** Run `sh <framework repo>/install.sh --upgrade <this assistant's root>`, asking the human
-   where the framework repo is if you don't know. It refuses while tracked files have uncommitted
-   changes, so commit first. It reports either a clean merge, nothing new, or the conflicted files.
-   If the human already ran it, start from its report.
-2. **Resolve conflicts**, file by file. In each, the base is the previous framework version, *ours* is
-   this assistant, and *theirs* is the new framework:
+1. **Stage.** Run `sh <framework repo>/install.sh --upgrade <this assistant's root>`, asking the human
+   where the framework repo is if you don't know. It takes every file only the framework changed,
+   keeps every file only this assistant changed, and reports one of three things: nothing new, a clean
+   upgrade (with the files it updated), or the files both sides changed. If the human already ran it,
+   start from its report; if `.framework.new/` already exists, an earlier upgrade is unfinished — go
+   to step 2.
+2. **Merge each file both sides changed.** Compare `diff .framework/<f> <f>` (this assistant's edits)
+   with `diff .framework/<f> .framework.new/<f>` (the framework's), and write the merged result to
+   `<f>`:
    - **Memory content is the human's** — identity and preferences in `core.md`, `state.md`,
      `journal.md`, and the bundle catalog. Keep ours, taking only the framework's changes to the
      headings and format text around it.
@@ -27,17 +30,18 @@ them.
      proposal.
    - **A file the framework deleted that this assistant changed** — ask the human.
 
-   Commit the merge once no file holds a conflict marker.
-3. **Catch up.** Review what the framework changed (`git diff framework~1 framework`). If `core.md`
-   gained `{{placeholders}}`, run `skills/brain-init` for just those. If a change alters a format that
-   existing bundles or memory already use, tell the human what would need converting — upgrades don't
-   convert data on their own.
+   Once every file is merged, make the new framework the base for next time:
+   `rm -rf .framework && mv .framework.new .framework`.
+3. **Catch up.** Review what the framework changed — the files the script updated and the ones you
+   merged. If `core.md` gained `{{placeholders}}`, run `skills/brain-init` for just those. If a change
+   alters a format that existing bundles or memory already use, tell the human what would need
+   converting — upgrades don't convert data on their own.
 4. **Verify.** Re-read `core.md` and `procedural.md`; your in-context copies are stale. Run the
    mechanical checks in `skills/bundle-lint`. Journal the upgrade — the framework revision and the
-   conflicts resolved — and commit.
+   files merged.
 
 ## Done when
 
-The merge is committed with no conflict markers left anywhere; the assistant's learned edits survive
-alongside the framework's changes; new placeholders are filled; the human knows of any format change
-their data needs; and the upgrade is journaled.
+Every file both sides changed is merged and `.framework.new/` is gone; the assistant's learned edits
+survive alongside the framework's changes; new placeholders are filled; the human knows of any format
+change their data needs; and the upgrade is journaled.
